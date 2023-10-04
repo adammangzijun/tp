@@ -7,11 +7,11 @@
       "headings": {
         "about-us": "About Us",
         "project-team": "Project team",
-        "john-doe": "John Doe",
-        "jane-doe": "Jane Doe",
-        "johnny-doe": "Johnny Doe",
-        "jean-doe": "Jean Doe",
-        "james-doe": "James Doe"
+        "darren-low": "Darren Low",
+        "kim-hanjoo": "Kim Hanjoo",
+        "adam-ang-zi-jun": "Adam Ang Zi Jun",
+        "lin-yuxiang": "Lin Yuxiang",
+        "johnny-doe": "Johnny Doe"
       },
       "headingKeywords": {}
     },
@@ -40,7 +40,7 @@
       "src": "DeveloperGuide.md",
       "title": "Developer Guide",
       "headings": {
-        "ab-3-developer-guide": "AB-3 Developer Guide",
+        "medbook-developer-guide": "MedBook Developer Guide",
         "acknowledgements": "Acknowledgements",
         "setting-up-getting-started": "Setting up, getting started",
         "design": "Design",
@@ -107,15 +107,18 @@
       "src": "UserGuide.md",
       "title": "User Guide",
       "headings": {
-        "ab-3-user-guide": "AB-3 User Guide",
+        "medbook-user-guide": "MedBook User Guide",
         "quick-start": "Quick start",
         "features": "Features",
         "viewing-help-help": "Viewing help : help",
-        "adding-a-person-add": "Adding a person: add",
-        "listing-all-persons-list": "Listing all persons : list",
-        "editing-a-person-edit": "Editing a person : edit",
+        "adding-a-patient-addpatient": "Adding a patient: addpatient",
+        "adding-medical-records-addrecord": "Adding Medical Records : 'addrecord'",
+        "listing-all-persons-view": "Listing all persons : view",
+        "view-patient-detail": "View patient detail",
+        "editing-detail-of-a-patient-editdetail": "Editing detail of a patient : editdetail",
         "locating-persons-by-name-find": "Locating persons by name: find",
-        "deleting-a-person-delete": "Deleting a person : delete",
+        "deleting-a-patient-delete": "Deleting a patient : delete",
+        "pinning-a-patient-pin": "Pinning a patient : pin",
         "clearing-all-entries-clear": "Clearing all entries : clear",
         "exiting-the-program-exit": "Exiting the program : exit",
         "saving-the-data": "Saving the data",
@@ -132,6 +135,38 @@
       "title": "",
       "headings": {
         "addressbook-level-3": "AddressBook Level-3"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "team/adammangzijun.md",
+      "title": "Adam's Project Portfolio Page",
+      "headings": {
+        "project-medbook": "Project: MedBook"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "team/clin-lyx.md",
+      "title": "Lin Yuxiang's Project Portfolio Page",
+      "headings": {
+        "project-medbook": "Project Medbook"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "team/darren159.md",
+      "title": "Darren's Project Portfolio Page",
+      "headings": {
+        "project-medbook": "Project: MedBook"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "team/hjoneweek.md",
+      "title": "Hanjoo's Project Portfolio Page",
+      "headings": {
+        "project-medbook": "Project: MedBook"
       },
       "headingKeywords": {}
     },
