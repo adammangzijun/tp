@@ -11,7 +11,7 @@
         "kim-hanjoo": "Kim Hanjoo",
         "adam-ang-zi-jun": "Adam Ang Zi Jun",
         "lin-yuxiang": "Lin Yuxiang",
-        "johnny-doe": "Johnny Doe"
+        "ryan-ong-wei-xian": "Ryan Ong Wei Xian"
       },
       "headingKeywords": {}
     },
@@ -58,6 +58,7 @@
         "product-scope": "Product scope",
         "user-stories": "User stories",
         "use-cases": "Use cases",
+        "use-case-uc08-searching-for-patients": "Use Case: UC08 - Searching for Patients",
         "non-functional-requirements": "Non-Functional Requirements",
         "glossary": "Glossary",
         "appendix-instructions-for-manual-testing": "Appendix: Instructions for manual testing",
@@ -116,7 +117,7 @@
         "listing-all-persons-view": "Listing all persons : view",
         "view-patient-detail": "View patient detail",
         "editing-detail-of-a-patient-editdetail": "Editing detail of a patient : editdetail",
-        "locating-persons-by-name-find": "Locating persons by name: find",
+        "locating-persons-by-keywords-search": "Locating persons by keywords: search",
         "deleting-a-patient-delete": "Deleting a patient : delete",
         "pinning-a-patient-pin": "Pinning a patient : pin",
         "clearing-all-entries-clear": "Clearing all entries : clear",
@@ -171,10 +172,10 @@
       "headingKeywords": {}
     },
     {
-      "src": "team/johndoe.md",
-      "title": "John Doe's Project Portfolio Page",
+      "src": "team/ryanongwx.md",
+      "title": "Ryan's Project Portfolio Page",
       "headings": {
-        "project-addressbook-level-3": "Project: AddressBook Level 3"
+        "project-medbook": "Project: MedBook"
       },
       "headingKeywords": {}
     },
