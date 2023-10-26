@@ -1,0 +1,11 @@
+@startuml
+!include style.puml
+skinparam arrowThickness 1.1
+skinparam arrowColor MODEL_COLOR
+skinparam classBackgroundColor MODEL_COLOR
+
+UniqueAppointmentList -down-> "*" Appointment
+Appointment *--> DateTime
+Appointment --> Person
+Appointment *--> Name
+@enduml
