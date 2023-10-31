@@ -1,0 +1,68 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":AddRecordCommandParser" as AddRecordCommandParser LOGIC_COLOR
+participant ":AddRecordCommand" as AddRecordCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("addrecord 1 d/27-10-2023...")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("addrecord 1 d/27-10-2023...")
+activate AddressBookParser
+
+create AddRecordCommandParser
+AddressBookParser -> AddRecordCommandParser
+activate AddRecordCommandParser
+
+AddRecordCommandParser --> AddressBookParser
+deactivate AddRecordCommandParser
+
+AddressBookParser -> AddRecordCommandParser : parse("1 d/27-10-2023...)
+activate AddRecordCommandParser
+
+create AddRecordCommand
+AddRecordCommandParser -> AddRecordCommand
+activate AddRecordCommand
+
+AddRecordCommand --> AddRecordCommandParser : record
+deactivate AddRecordCommand
+
+AddRecordCommandParser --> AddressBookParser : record
+deactivate AddRecordCommand
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+AddRecordCommandParser -[hidden]-> AddressBookParser
+destroy AddRecordCommandParser
+
+AddressBookParser --> LogicManager : record
+deactivate AddressBookParser
+
+LogicManager -> AddRecordCommand : execute(model)
+activate AddRecordCommand
+
+AddRecordCommand -> Model : add(record)
+
+create CommandResult
+AddRecordCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> AddRecordCommand
+deactivate CommandResult
+
+deactivate AddRecordCommand
+
+AddRecordCommand --> LogicManager : result
+
+[<--LogicManager
+deactivate LogicManager
+
+@enduml
