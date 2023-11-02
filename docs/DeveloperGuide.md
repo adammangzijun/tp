@@ -1,581 +1,378 @@
 ---
-  layout: default.md
-  title: "Developer Guide"
-  pageNav: 3
+layout: default.md
+title: "Developer Guide"
+pageNav: 3
 ---
 
 # MedBook Developer Guide
+## Acknowledgements
 
-<!-- * Table of Contents -->
-<page-nav-print />
+This project has benefited from the use of several third-party libraries, as well as ideas and code snippets from various sources. We express our gratitude to the creators and maintainers of these resources.
+
+### Java Cryptography Extension (JCE)
+
+The project utilizes the Java Cryptography Extension (JCE) for implementing encryption and decryption functionalities. Specific classes such as `Cipher`, `IvParameterSpec`, and `SecretKeySpec` have been used to perform cryptographic operations.
+
+- `javax.crypto.Cipher`: This class provides the functionality of a cryptographic cipher, used here for encryption and decryption.
+- `javax.crypto.spec.IvParameterSpec`: This class specifies an initialization vector (IV) to provide an additional parameter to algorithms.
+- `javax.crypto.spec.SecretKeySpec`: This class specifies a secret key in a provider-independent fashion.
+
+These classes are part of the Java Cryptography Extension (JCE) framework, which is included in the Java Standard Edition (Java SE) from Oracle. More information can be found on the [Official Oracle Documentation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/javax/crypto/Cipher.html).
+
+We ensure that all used and redistributed libraries are credited appropriately, and we encourage users and developers to also adhere to the terms and conditions of each library's license.
 
 ---
 
-## **Acknowledgements**
+## Setting up and Getting Started
 
-_{ list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well }_
-
----
-
-## **Setting up, getting started**
-
-Refer to the guide [_Setting up and getting started_](SettingUp.md).
+For initial setup and getting started with the development, please refer to the guide: [_Setting up and getting started_](SettingUp.md).
 
 ---
 
-## **Design**
+## Design Overview
 
 ### Architecture
 
-<puml src="diagrams/ArchitectureDiagram.puml" width="280" />
+<puml src="diagrams/ArchitectureDiagram.puml" width="280" alt="Architecture Diagram"/>
 
-The **_Architecture Diagram_** given above explains the high-level design of the App.
+The **_Architecture Diagram_** above provides a high-level design overview of the application.
 
-Given below is a quick overview of main components and how they interact with each other.
+Below is a quick overview of the main components and their interactions:
 
-**Main components of the architecture**
+#### Main Components:
 
-**`Main`** (consisting of classes [`Main`](https://github.com/AY2324S1-CS2103T-T12-4/tp/blob/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/AY2324S1-CS2103T-T12-4/tp/blob/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
+- **`Main`**: Responsible for initializing other components in the correct sequence upon application launch, and ensures proper shut down procedures are followed. It consists of [`Main`](https://github.com/AY2324S1-CS2103T-T12-4/tp/blob/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/AY2324S1-CS2103T-T12-4/tp/blob/master/src/main/java/seedu/address/MainApp.java) classes.
 
-- At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
-- At shut down, it shuts down the other components and invokes cleanup methods where necessary.
+- **`UI`** ([Details](#ui-component)): Manages the User Interface of the app.
+- **`Logic`** ([Details](#logic-component)): Handles command execution.
+- **`Model`** ([Details](#model-component)): Manages in-memory data.
+- **`Storage`** ([Details](#storage-component)): Handles reading from and writing to the hard disk.
 
-The bulk of the app's work is done by the following four components:
+- **`Commons`**: A collection of classes used by multiple components.
 
-- [**`UI`**](#ui-component): The UI of the App.
-- [**`Logic`**](#logic-component): The command executor.
-- [**`Model`**](#model-component): Holds the data of the App in memory.
-- [**`Storage`**](#storage-component): Reads data from, and writes data to, the hard disk.
+#### Component Interactions:
 
-[**`Commons`**](#common-classes) represents a collection of classes used by multiple other components.
+The sequence diagram below shows the interactions between components for the `delete 1` command:
 
-**How the architecture components interact with each other**
+<puml src="diagrams/ArchitectureSequenceDiagram.puml" width="574" alt="Architecture Sequence Diagram" />
 
-The _Sequence Diagram_ below shows how the components interact with each other for the scenario where the user issues the command `delete 1`.
+Each of the four main components:
 
-<puml src="diagrams/ArchitectureSequenceDiagram.puml" width="574" />
+- Defines its API in an interface named after the component.
+- Implements its functionality using a `{Component Name}Manager` class, following the corresponding API interface.
 
-Each of the four main components (also shown in the diagram above),
+For example, the `Logic` component's API is defined in `Logic.java`, and its functionality is implemented in `LogicManager.java`.
 
-- defines its _API_ in an `interface` with the same name as the Component.
-- implements its functionality using a concrete `{Component Name}Manager` class (which follows the corresponding API `interface` mentioned in the previous point.
+#### Detailed Component Descriptions:
 
-For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class (reason: to prevent outside component's being coupled to the implementation of a component), as illustrated in the (partial) class diagram below.
-
-<puml src="diagrams/ComponentManagers.puml" width="300" />
-
-The sections below give more details of each component.
-
-### UI component
-
-The **API** of this component is specified in [`Ui.java`](https://github.com/AY2324S1-CS2103T-T12-4/tp/blob/master/src/main/java/seedu/address/ui/Ui.java)
-
-<puml src="diagrams/UiClassDiagram.puml" alt="Structure of the UI Component"/>
-
-The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
-
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/resources/view/MainWindow.fxml)
-
-The `UI` component,
-
-- executes user commands using the `Logic` component.
-- listens for changes to `Model` data so that the UI can be updated with the modified data.
-- keeps a reference to the `Logic` component, because the `UI` relies on the `Logic` to execute commands.
-- depends on some classes in the `Model` component, as it displays `Person` object residing in the `Model`.
-
-### Logic component
-
-**API** : [`Logic.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/logic/Logic.java)
-
-Here's a (partial) class diagram of the `Logic` component:
-
-<puml src="diagrams/LogicClassDiagram.puml" width="550"/>
-
-The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` API call as an example.
-
-<puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `delete 1` Command" />
-
-<box type="info" seamless>
-
-**Note:** The lifeline for `DeleteCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
-</box>
-
-How the `Logic` component works:
-
-1. When `Logic` is called upon to execute a command, it is passed to an `AddressBookParser` object which in turn creates a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
-1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
-1. The command can communicate with the `Model` when it is executed (e.g. to delete a patient).
-1. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
-
-Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
-
-<puml src="diagrams/ParserClasses.puml" width="600"/>
-
-How the parsing works:
-
-- When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object.
-- All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
-
-### Model component
-
-**API** : [`Model.java`](https://github.com/AY2324S1-CS2103T-T12-4/tp/blob/master/src/main/java/seedu/address/model/Model.java)
-
-<puml src="diagrams/ModelClassDiagram.puml" width="450" />
-
-The `Model` component,
-
-- stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
-- stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
-- stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
-- does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
-
-<box type="info" seamless>
-
-**Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in the `AddressBook`, which `Person` references. This allows `AddressBook` to only require one `Tag` object per unique tag, instead of each `Person` needing their own `Tag` objects.<br>
-
-<puml src="diagrams/BetterModelClassDiagram.puml" width="450" />
-
-</box>
-
-### Storage component
-
-**API** : [`Storage.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
-
-<puml src="diagrams/StorageClassDiagram.puml" width="550" />
-
-The `Storage` component,
-
-- can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
-- inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
-- depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
-
-### Common classes
-
-Classes used by multiple components are in the `seedu.addressbook.commons` package.
+[More details about each component are provided in the subsequent sections.](#detailed-component-descriptions)
 
 ---
 
-## **Implementation**
+### Detailed Component Descriptions
 
-This section describes some noteworthy details on how certain features are implemented.
+#### UI Component
 
-### Records feature
+- **API**: [`Ui.java`](https://github.com/AY2324S1-CS2103T-T12-4/tp/blob/master/src/main/java/seedu/address/ui/Ui.java)
+- The UI component is responsible for handling all user interface operations.
+
+<details>
+<summary>Click to expand details</summary>
+
+<puml src="diagrams/UiClassDiagram.puml" alt="Structure of the UI Component"/>
+
+The UI is composed of various components such as `MainWindow`, `CommandBox`, `ResultDisplay`, `PersonListPanel`, and `StatusBarFooter`, all of which inherit from the `UiPart` class.
+
+The UI layouts are defined in corresponding `.fxml` files located in the `src/main/resources/view` folder.
+
+Key responsibilities include:
+
+- Executing user commands via the `Logic` component.
+- Listening for data changes in the `Model` and updating the UI accordingly.
+- Maintaining a reference to the `Logic` component for command execution.
+- Depending on certain `Model` classes to display `Person` objects.
+
+</details>
+
+---
+
+#### Logic Component
+
+- **API**: [`Logic.java`](https://github.com/AY2324S1-CS2103T-T12-4/tp/blob/master/src/main/java/seedu/address/logic/Logic.java)
+- The Logic component is responsible for interpreting and executing user commands.
+
+<details>
+<summary>Click to expand details</summary>
+
+Here's a partial class diagram of the `Logic` component:
+
+<puml src="diagrams/LogicClassDiagram.puml" width="550" alt="Logic Component Class Diagram"/>
+
+Key functionalities include:
+
+- Interpreting user input and generating the corresponding `Command` object.
+- Executing the command and generating a `CommandResult` object.
+- Depending on the `Model` component to perform data operations.
+- Managing various command parsers to handle specific command formats.
+
+</details>
+
+---
+
+#### Model Component
+
+- **API**: [`Model.java`](https://github.com/AY2324S1-CS2103T-T12-4/tp/blob/master/src/main/java/seedu/address/model/Model.java)
+- The Model component manages the application's in-memory data.
+
+<details>
+<summary>Click to expand details</summary>
+
+<puml src="diagrams/ModelClassDiagram.puml" width="450" alt="Model Component Class Diagram"/>
+
+Key responsibilities include:
+
+- Storing address book data and selected `Person` objects.
+- Managing user preferences.
+- Providing an unmodifiable view of lists of `Person` objects for UI binding.
+
+</details>
+
+---
+
+#### Storage Component
+
+- **API**: [`Storage.java`](https://github.com/AY2324S1-CS2103T-T12-4/tp/blob/master/src/main/java/seedu/address/storage/Storage.java)
+- The Storage component manages data persistence.
+
+<details>
+<summary>Click to expand details</summary>
+
+<puml src="diagrams/StorageClassDiagram.puml" width="550" alt="Storage Component Class Diagram"/>
+
+Key functionalities include:
+
+- Saving and retrieving address book data and user preferences in JSON format.
+- Implementing both `AddressBookStorage` and `UserPrefStorage` for flexibility.
+- Depending on certain `Model` classes for data object definitions.
+
+</details>
+
+---
+## Common Classes
+
+Classes used by multiple components are housed in the `seedu.addressbook.commons` package.
+
+---
+
+## Implementation
+
+This section delves into the implementation details of various noteworthy features.
+
+### Records Feature
 
 #### General Implementation Details
 
 <puml src="diagrams/RecordClassDiagram.puml"/>
 
-A `Record` object is composed of classes that represent the various attributes available in each `Record`. To enforce uniqueness between records, all records are stored in a `UniqueRecordList`.
+A `Record` object encapsulates various attributes:
 
-The related attributes of a `Record` are:
+- `DateTime`: Date and time of the patient's clinic visit
+- `List<Condition>`: Patient's health conditions
+- `List<Medication>`: Medications prescribed to the patient
 
-- `DateTime`: The date and time of the patient's visit to the clinic
-- `List<Condition>`: The list of conditions the patient has
-- `List<Medication>`: The list of medications that the doctor prescribes to the patient
+Uniqueness of records is maintained through the `UniqueRecordList`.
 
-#### Add a Record
+#### Adding a Record
 
 ##### Overview
 
-The `addrecord` command adds a new `Record` object to the patient in MedBook.
+The `addrecord` command integrates a new `Record` object with the patient's details in MedBook.
 
-#### Implementation
+#### Implementation Steps
 
-Step 1. `AddRecordCommandParser` first parses the user input and verifies all necessary parameters are present in the user input and are valid.
-Step 2. A `Record` object is created and passed as a parameter of `AddRecordCommand` object's constructor.
-Step 3. After `AddRecordCommand` is created, `AddRecordCommand#execute()` is executed, which adds a new `Record` to the `UniqueRecordList` that belongs to each patient.
+1. **Parse User Input**: `AddRecordCommandParser` checks for necessary parameters and their validity.
+2. **Create Record Object**: A `Record` object is instantiated and handed over to the `AddRecordCommand`.
+3. **Execute Command**: `AddRecordCommand#execute()` adds the new `Record` to the patient's `UniqueRecordList`.
 
 <puml src="diagrams/AddRecordSequenceDiagram.puml" width="450" />
 
-#### Design Consideration
+#### Design Considerations
 
-**Aspect: Structure of Appointment class:**
+**Aspect: Structure of the Appointment class:**
 
-- **Alternative 1 (current choice):** Each `Person` contains a `UniqueRecordList` with all the medical records of the patient from the past until now.
-  - Pros: Easy to retrieve all the records of a single `Person`.
-  - Cons: Difficult to retrieve all the records of every `Person` in the `UniquePersonList` to view.
-- **Alternative 2:** `Model` contains a `UniqueRecordList` which contains all records of every patient. Each `Record` then contains the `Person` it is scheduled with.
-  - Pros: Easy to retrieve all records to view.
-  - Cons: Difficult to retrieve all the records associated with a single `Person`.
+- **Alternative 1 (Current Choice)**: Each `Person` object holds a `UniqueRecordList`.
+   - *Pros*: Simplifies the retrieval of a person's records.
+   - *Cons*: Fetching records across all individuals can be cumbersome.
+- **Alternative 2**: The `Model` holds a `UniqueRecordList` for records of all patients.
+   - *Pros*: Convenient for displaying all records.
+   - *Cons*: Hard to fetch records associated with a specific `Person`.
 
-### editpatient Feature
+### Edit Patient Feature
 
-The proposed editpatient mechanism is facilitated by `EditCommand`. It receives an `PATIENTINDEX` and the `FIELD` and `NEWVALUE`, and then it edits the
-specified field of the specific Patient at that index in the `AddressBook`. Additionally, the following classes, methods and UI component
-are implemented:
+The `editpatient` mechanism is primarily handled by `EditCommand`.
 
-- `EditCommandParser` - Read the command information and create a EditCommand with the specified `PATIENTINDEX`, `FIELD` and `NEWVALUE`.
-- `EditPersonDescriptor` - This class in EditCommand Stores the details to edit the patient with. The specified non-empty field value will replace the
-  corresponding field value of the patient.
-- `ModelManager#setPerson(Person,Person)`, `AddressBook#SetPerson(Person,Person)`, `UniquePersonList#setPerson(Person,Person)`
-  - Sets the target patient in the AddressBook with the edited patient.
+#### Workflow
 
-This newly implemented `EditCommandParser` class will then be used in the `AddressBookParser#parseCommand(String)`
-and return the `EditCommand` with the `PATIENTINDEX` and the `EditPersonDescriptor` as parameters.
-The `EditCommand#execute(Model)` method will then update the current state of the `Model` according to the edit.
+1. **Initialization**: On startup, the `AddressBook` is populated with sample data.
+2. **Execution**: The user modifies a patient’s details using the `editpatient` command, triggering updates in the `Model` and `AddressBook`.
+3. **Update**: The patient’s details are updated and the new AddressBook is displayed.
 
-Given below is an example usage scenario and how the editpatient mechanism behaves at each step.
+**Related Classes and Methods:**
 
-Step 1. The user launches the application for the first time. The `AddressBook` will be initialized
-with the sample data.
+- `EditCommandParser`: Parses command input.
+- `EditPersonDescriptor`: Holds editable patient details.
+- `ModelManager#setPerson(Person,Person)`, `AddressBook#SetPerson(Person,Person)`, `UniquePersonList#setPerson(Person,Person)`: Updates patient details.
 
-Step 2. The user execute `editpatient 1/name/Josh` command to edit name of the 1st patient in the Medbook to **Josh**.
-The `editpatient` command calls `Model#setPerson(Person, Person)` to edit the Person in the model, which then calls `AddressBook#SetPerson(Person,Person)`,
-which in turn calls `UniquePersonList#setPerson(Person)` to set the target patient in the uniquePersonList with the edited patient.
+**Sequence Diagram**: *Pending Implementation*
 
-<box type="info" seamless>
+#### Design Considerations
 
-**Note:** If a command fails its execution, it will not call `Model#setPerson(Person,Person)`, so the Medbook will not
-edit the `Person` in the UniquePersonList.
+**Aspect: Edit Patient Execution:**
 
-</box>
+- **Alternative 1 (Current Choice)**: Create a copy of the `Person`, edit, then replace.
+   - *Pros*: Future-proof, maintains data integrity.
+   - *Cons*: Adds complexity, potential performance issues.
+- **Alternative 2**: Directly edit the `Person` in the AddressBook.
+   - *Pros*: Straightforward.
+   - *Cons*: Limits future functionalities, potential data integrity issues.
 
-Step 3. The `Model` then calls `AddressBook#setPerson(Person,Person)` to update the Person in the `AddressBook`.
-
-Step 4. The `AddressBook` then calls `UniquePersonList#(Person,Person)` to set the target patient
-in the uniquePersonList with the edited patient in the UniquePersonList.
-
-Step 5. The newly updated AddressBook will then be shown.
-
-The following sequence diagram shows how the editpatient operation works:
-
-**Will be done soon**
-
-#### Design considerations:
-
-**Aspect: How editpatient executes:**
-
-- **Alternative 1 (current choice):** Create a defensive copy of the Person and then editing it, then replace the original patient with the edited patient.
-
-  - Pros: Allows for more complex operations and functionalities in the future, like tracking edit histories. This immutability maintains integrity of the data.
-  - Cons: Introduces added complexity and potential performance overhead.
-
-- **Alternative 2:** Edit the patient directly in the AddressBook.
-  - Pros: Direct and straightforward implementation.
-  - Cons: May not be flexible if there are future requirements to retain edit history or additional patient properties.
-
-### Appointments feature
+### Appointments Feature
 
 #### General Implementation Details
 
 <puml src="diagrams/AppointmentClassDiagram.puml"/>
 
-An `Appointment` object is composed of classes that represent the various attributes available in each `Appointment`. To enforce uniqueness between appointments, all appointments are stored in a `UniqueAppointmentList`.
+An `Appointment` is comprised of:
 
-The related attributes of an `Appointment` are:
+- `Name`: Appointment’s title.
+- `DateTime`: Scheduling details.
+- `Person`: The patient involved.
 
-- `Name`: Name of the Appointment
-- `DateTime`: Date and Time of the Appointment
-- `Person`: The Person the Appointment is scheduled with
+Uniqueness is enforced through a `UniqueAppointmentList`.
 
-#### Add an Appointment
+#### Adding an Appointment
 
 ##### Overview
 
-The `addappointment` command adds a new `Appointment` object to Medbook.
+`addappointment` adds a new `Appointment` to MedBook.
 
-#### Implementation
+#### Implementation Steps
 
-The first stage of the implementation is to parse the user input. `AddAppointmentCommandParser` is used to parse and validate the user input for each attributes of `Appointment`. An `Appointment` object is then created with the validated attributes and used to create an `AddAppointmentCommand` object.
-
-Next, the `AddCommand#execute()` method is executed to add the new `Appointment` object to the `UniqueAppointmentList`.
-
-The following sequence diagram shows how an `Appointment` is added:
+1. **Parse User Input**: Utilize `AddAppointmentCommandParser` for attribute validation.
+2. **Create and Execute**: Instantiate an `Appointment` and execute `AddAppointmentCommand`.
 
 <puml src="diagrams/AddAppointmentSequenceDiagram.puml" width="450" />
 
-#### Design considerations:
+#### Design Considerations
 
-**Aspect: Structure of Appointment class:**
+**Aspect: Structure of the Appointment class:**
 
-- **Alternative 1 (current choice):** `Model` contains a `UniqueAppointmentList` which contains all appointments. Each `Appointment` then contains the `NRIC` of the patient it is scheduled with.
+- **Alternative 1 (Current Choice)**: `Model` holds a `UniqueAppointmentList`, each `Appointment` has a `Person`’s NRIC.
+   - *Pros*: Simplifies displaying all appointments.
+   - *Cons*: Hard to fetch a specific `Person`’s appointments, issues with NRIC updates.
+- **Alternative 2**: Each `Person` holds their `UniqueAppointmentList`.
+   - *Pros*: Easy to retrieve a person's appointments.
+   - *Cons*: Fetching all appointments can be complex.
+## View Feature
 
-  - Pros: Easy to retrieve all appointments to view.
-  - Cons:
-    - Difficult to retrieve all the appointments scheduled with a single `Person`.
-    - If the `NRIC` is updated through `editpatient`, it is not automatically updated in the `Appointment`.
+### Implementation
 
-- **Alternative 2:** Each `Person` contains a `UniqueAppointmentList` with all the appointments he is scheduled with.
-  - Pros: Easy to retrieve all the appointments scheduled with a single `Person`.
-  - Cons: Difficult to retrieve all appointments to view.
+The view mechanism is facilitated through `ViewCommand`, which takes a `PATIENTINDEX` as input and updates the `records` and `personBeingViewed` attributes in `AddressBook`. 
 
-### \[Proposed\] Undo/redo feature
+Key components implemented include:
 
-#### Proposed Implementation
+- `ViewCommandParser`: Parses command input to create a `ViewCommand` with the specified `PATIENTINDEX`.
+- `AddressBook`: Contains methods such as `setRecords(Person)`, `getRecordList()`, and `getPersonBeingViewed()`.
+- `RecordCard`: A UI component displaying a single record’s information.
+- `RecordListPanel`: A UI component housing a list of `RecordCard`s.
 
-The proposed undo/redo mechanism is facilitated by `VersionedAddressBook`. It extends `AddressBook` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`. Additionally, it implements the following operations:
+These methods in `AddressBook` are exposed via the `Model` interface (`updateRecords(Person)`, `getRecordList()`, `getPersonBeingViewed()`), and their get variants are also available through the `Logic` interface.
 
-- `VersionedAddressBook#commit()` — Saves the current address book state in its history.
-- `VersionedAddressBook#undo()` — Restores the previous address book state from its history.
-- `VersionedAddressBook#redo()` — Restores a previously undone address book state from its history.
+### Usage Scenario
 
-These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
+1. **Initialization**: Upon launch, `AddressBook` is populated with sample data. `MainWindow` invokes `getRecordList()` and `getPersonBeingViewed()` to initialize the `recordListPanel` and `personBeingViewedPanel`.
 
-Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
+2. **View Command**: User executes `view 1`, initiating a `Model#updateRecords(Person)` call. 
 
-Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.
+   > **Note**: A failed command will not trigger a `Model#updateRecords(Person)` call, preventing any updates to `records` and `personBeingViewed`.
 
-<puml src="diagrams/UndoRedoState0.puml" alt="UndoRedoState0" />
+3. **Update and Display**: `Model` updates `AddressBook`’s variables, displaying the patient's medical records and personal card in their respective UI panels.
 
-Step 2. The user executes `delete 5` command to delete the 5th patient in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
-
-<puml src="diagrams/UndoRedoState1.puml" alt="UndoRedoState1" />
-
-Step 3. The user executes `add n/David …​` to add a new patient. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
-
-<puml src="diagrams/UndoRedoState2.puml" alt="UndoRedoState2" />
-
-<box type="info" seamless>
-
-**Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
-
-</box>
-
-Step 4. The user now decides that adding the patient was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
-
-<puml src="diagrams/UndoRedoState3.puml" alt="UndoRedoState3" />
-
-<box type="info" seamless>
-
-**Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather
-than attempting to perform the undo.
-
-</box>
-
-The following sequence diagram shows how the undo operation works:
-
-<puml src="diagrams/UndoSequenceDiagram.puml" alt="UndoSequenceDiagram" />
-
-<box type="info" seamless>
-
-**Note:** The lifeline for `UndoCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
-
-</box>
-
-The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the address book to that state.
-
-<box type="info" seamless>
-
-**Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
-
-</box>
-
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
-
-<puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
-
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
-
-<puml src="diagrams/UndoRedoState5.puml" alt="UndoRedoState5" />
-
-The following activity diagram summarizes what happens when a user executes a new command:
-
-<puml src="diagrams/CommitActivityDiagram.puml" width="250" />
-
-#### Design considerations:
-
-**Aspect: How undo & redo executes:**
-
-- **Alternative 1 (current choice):** Saves the entire address book.
-
-  - Pros: Easy to implement.
-  - Cons: May have performance issues in terms of memory usage.
-
-- **Alternative 2:** Individual command knows how to undo/redo by
-  itself.
-  - Pros: Will use less memory (e.g. for `delete`, just save the patient being deleted).
-  - Cons: We must ensure that the implementation of each individual command are correct.
-
-_{more aspects and alternatives to be added}_
-
-### View feature
-
-#### Implementation
-
-The proposed view mechanism is facilitated by `ViewCommand`. It receives an `PATIENTINDEX`, and then it updates the
-`records` and `personBeingViewed` in the `AddressBook`. Additionally, the following classes, methods and UI component
-are implemented:
-
-- `ViewCommandParser` - Read the command information and create a ViewCommand with the specified `PATIENTINDEX`.
-- `AddressBook#setRecords(Person)` - Assign value to the `records` and `personBeingViewed`.
-- `AddressBook#getRecordList()` - return the `records`.
-- `AddressBook#getPersonBeingViewed()` - return the `personBeingViewed`.
-- `RecordCard` - a UI component that holds the information of single record.
-- `RecordListPanel` - a UI component that holds a place at the Main Window and stores a list of `RecordCard`.
-
-The newly implemented methods in `AddressBook` are exposed in the `Model` interface as `Model#updateRecords(Person)`,
-`Model#getRecordList()` and `Model#getPersonBeingViewed()`. The get methods are also exposed in `Logic` interface as
-`Logic#getRecordList()`, and `Logic#getPersonBeingViewed()`.
-
-Given below is an example usage scenario and how the view mechanism behaves at each step.
-
-Step 1. The user launches the application for the first time. The `AddressBook` will be initialized
-with the sample data. The `MainWindow` calls `Logic#getRecordList()`, and `Logic#getPersonBeingViewed()` so that
-`recordListPanel` and `personBeingViewedPanel` can safely occupy their destined places.
-
-Step 2. The user execute `view 1` command to view the medical records of the 1st patient in the Medbook.
-The `view` command calls `Model#updateRecords(Person)`.
-
-<box type="info" seamless>
-
-**Note:** If a command fails its execution, it will not call `Model#updateRecrods(Person)`, so the Medbook will not
-update the `record` and `personBeingViewed` variable.
-
-</box>
-
-Step 3. The `Model` then calls `AddressBook#setRecords(Person)` to update the variable in the `AddressBook`. The medical
-records of the patient is displayed at the left column in the `recordListPanel`. The `personBeingViewedPanel` contains
-the patient card of the patient.
-
-The following sequence diagram shows how the undo operation works:
+The following sequence diagram shows how the view operation works:
 
 <puml src="diagrams/ViewSequenceDiagram.puml" alt="ViewSequenceDiagram" />
 
-#### Design considerations:
+### Design Considerations
 
-**Aspect: How view executes:**
+#### How View Executes
 
-- **Alternative 1 (current choice):** Saves the `records` as `UniqueRecordList` and `personBeingViewed`
-  as `UniquePersonList`.
-  _ Pros: Easy to implement.
-  _ Cons: May have performance issues in terms of memory usage.
-
-- **Alternative 2:** Saves the `records` as `UniqueRecordList` and `personBeingViewed`as `Person`.
-  _ Pros: Will use less memory (e.g. for `delete`, just save the patient being deleted).
-  _ Cons: A lot of extra work need to be done (e.g. need to have an empty patient object and need to make it as a node
-  before passing into the `personBeingViewedPanel`).
-
-Certainly! Here is a portion that you can add to your developer guide to explain the encryption/decryption feature:
+- **Alternative 1**: (Chosen) Utilize `UniqueRecordList` for `records` and `UniquePersonList` for `personBeingViewed`.
+  - _Pros_: Simpler implementation.
+  - _Cons_: Potential memory usage issues.
+- **Alternative 2**: Utilize `UniqueRecordList` for `records` and `Person` for `personBeingViewed`.
+  - _Pros_: Reduced memory usage.
+  - _Cons_: Increased complexity and required additional object manipulations.
 
 ---
 
-### [Implemented] Encryption/Decryption Feature
+## Encryption/Decryption Feature
 
-#### Implementation
+### Implementation
 
-MedBook ensures the privacy and safety of user data by encrypting the data before saving it to the hard disk. The data is then decrypted when loaded back into the application upon restart. The implementation of this feature is transparent to the user, providing a seamless experience.
+MedBook secures user data through automatic encryption before saving to disk and decryption upon loading.
 
-#### How it works
+#### How it Works
 
-##### Encryption
+1. **Encryption**: Upon executing a data-altering command:
+   - Convert data object to JSON.
+   - Encrypt the JSON string using AES (CBC mode, PKCS5 padding).
+   - Save encrypted string to disk.
+2. **Decryption**: Upon application start:
+   - Read and decrypt the stored string.
+   - Convert the decrypted JSON back into a data object.
 
-When a command that changes the data is executed, MedBook automatically triggers the encryption process before saving the data to the disk. The process is as follows:
+### Design Considerations
 
-1. The data, which is in the form of an object, is converted to a JSON string.
-2. The JSON string is then encrypted using Advanced Encryption Standard (AES) in Cipher Block Chaining (CBC) mode with PKCS5 padding.
-3. The encrypted string is saved to the data file.
+#### Choice of Encryption Algorithm
 
-The encryption key is securely managed to ensure that only MedBook can decrypt the data.
-
-##### Decryption
-
-When MedBook is started, it attempts to load the data from the disk. The process is as follows:
-
-1. MedBook reads the encrypted string from the data file.
-2. The encrypted string is decrypted using the same AES algorithm and key.
-3. The decrypted JSON string is converted back into an object, and the data is loaded into the application.
-
-#### Design Considerations
-
-##### Aspect: Choice of Encryption Algorithm
-
-- **Alternative 1 (chosen)**: Use AES in CBC mode with PKCS5 padding.
-
-  - _Pros_: Strong encryption that is widely recognized and trusted.
-  - _Cons_: May be computationally expensive for very large datasets.
-
+- **Alternative 1**: (Chosen) Use AES in CBC mode with PKCS5 padding.
+  - _Pros_: Strong, trusted encryption.
+  - _Cons_: Potentially high computational cost for large datasets.
 - **Alternative 2**: Use a lighter encryption algorithm.
-  - _Pros_: Faster encryption and decryption times, which might be noticeable for very large datasets.
-  - _Cons_: Potentially less secure, depending on the algorithm chosen.
+  - _Pros_: Faster processing times.
+  - _Cons_: Potentially less secure.
 
-### Attaching Files to Patient Records
+---
 
-This section provides an overview of the 'Attach Files' feature, which is already implemented in our application. This feature enables users to attach files to specific patient records, enhancing the user experience and functionality of the application.
+## Attach Files to Patient Records
 
-#### Implementation Details
+### Implementation Details
 
-The 'Attach Files' feature has been implemented by extending the `Record` class to include a `filePath` attribute, which stores the path to the attached file on the local computer. Each patient can have multiple records, but each record is limited to one attachment.
+This feature extends the `Record` class to include a `filePath`, allowing file attachments to patient records.
 
-##### Record Class
+#### Record Class
 
 ```java
 public class Record {
-    // Other attributes
+    // Additional filepath field
     private String filePath;
-
-    // Constructors, getters, and setters
 }
 ```
 
-The `Record` class includes:
+#### User Interface
 
-- `filePath`: A `String` that stores the path to the attached file.
+- **Attach File**: Users can attach files through a button click, which opens a file explorer for file selection. The `filePath` in `Record` gets updated accordingly.
+- **Opening Attached Files**: Clicking the file path attempts to open the file with the default associated program.
 
-##### User Interface
+### Design Considerations
 
-A 'Attach File' button is present in the record card on the specific patient's view page. The workflow for attaching a file is as follows:
-
-1. User clicks the 'Attach File' button.
-2. A file explorer window opens, allowing the user to navigate and select the desired file.
-3. Upon file selection, the application retrieves the file's path and updates the `filePath` attribute of the corresponding `Record` object.
-4. The updated record, including the file path, is then saved to the address book.
-
-##### Opening Attached Files
-
-Clicking on the displayed file path in the patient's record card triggers the application to:
-
-1. Retrieve the file path from the `filePath` attribute of the `Record` object.
-2. Attempt to open the file using the default program associated with the file type on the user's computer.
-3. If the file is inaccessible (moved or deleted), an error message is displayed to the user.
-
-#### Design Considerations
-
-##### Attach Files Implementation
-
-**Current Implementation**: Using CUI instead of CLI.
-
-- Pros:
-  - Easy to navigate and learn.
-  - More efficient as compared to typing in absolute file paths
-- Cons:
-  - Not particularly suited for fast typers
-
-### \[Proposed\] Data archiving
-
-_{Explain here how the data archiving feature will be implemented}_
+- **Current Implementation**: Using GUI for file attachments.
+  - _Pros_: User-friendly, especially for non-CLI users.
+  - _Cons_: May be slower for users proficient with CLI.
 
 ---
 
-## **Documentation, logging, testing, configuration, dev-ops**
-
-- [Documentation guide](Documentation.md)
-- [Testing guide](Testing.md)
-- [Logging guide](Logging.md)
-- [Configuration guide](Configuration.md)
-- [DevOps guide](DevOps.md)
-
----
-
-## **Appendix: Requirements**
-
-### Product scope
-
-**Target user profile**:
-
-- doctors
-- has a need to manage a significant number of patients
-- prefer desktop apps over other types
-- can type fast
-- prefers typing to mouse interactions
-- is reasonably comfortable using CLI apps
-
-**Value proposition**:
-
-- streamline patient management
-- easy access to patients' details such as medical records and contact information
-- manage patients faster than a typical mouse/GUI driven app
-
-### User stories
+### User Stories
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
@@ -608,182 +405,299 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `*`      | busy user   | reminders for upcoming patient appointments                                                                | remember to attend all the consultations                          |
 | `*`      | busy user   | blacklist certain patients                                                                                 | remove absurd patients                                            |
 
-_{More to be added}_
+## Use Cases
 
-### Use cases
-
-(For all use cases below, the **System** is the `MedBook` and the **Actor** is the `user`, unless
-specified otherwise)
-
-**Use case: UC01 - Viewing help**
-
-**MSS**
-
-**Use case: UC02 - Adding a patient**
-
-**MSS**
-
-**Use case: UC03 - Listing all patient**
-**Actors**: User (typically a healthcare professional)
-_Preconditions_:
-
-1. Patient list is displayed and has at least one patient entry.
-
-**MSS**
-
-1.  User requests to list patients.
-2.  Medbook shows a list of patients.
-
-    Use case ends.
-
-**Extensions**
-
-- 2a. The list is empty.
-
-  Use case ends.
-
-**Use case: UC04 - Editing a patient**
-
-1. User <u>lists all patients (UC03)</u>
-2. User provides the required input: `patient ID`, `detail field`, and `updated patient details`.
-3. MedBook updates the patient entry with new detail.
-4. MedBook shows successful edit details.
-
-   Use case ends.
-
-**Extensions**
-
-- 2a. User gives an invalid input in any of the given field.
-
-  - 2a1. MedBook shows an error message.
-
-    Use case ends.
-
-**MSS**
-
-**Use case: UC05 - Locating a specific patient**
-
-**MSS**
-
-**Use case: UC06 - Delete a patient**
-
-**MSS**
-
-1. User <u>lists all patients (UC03)</u>
-2. User requests to delete a specific patient in the list
-3. MedBook deletes the patient
-
-   Use case ends.
-
-**Extensions**
-
-- 2a. The given id is invalid.
-
-  - 2a1. MedBook shows an error message.~~
-
-    Use case ends.
-
-**Use case: UC07 - Pin a patient**
-
-**MSS**
-
-1.  User <u>lists all patients (UC03)</u>
-2.  User requests to pin a specific patient in the list
-3.  MedBook pins the patient
-
-    Use case ends.
-
-**Extensions**
-
-- 2a. The given id is invalid.
-
-  - 2a1. MedBook shows an error message.
-
-    Use case ends.
-
-## Use Case: UC08 - Searching for Patients
-
-**Main Success Scenario (MSS)**
-
-1. User initiates a search for patients based on specific keywords using the `search` command.
-2. MedBook performs a case-insensitive search of patient names and details.
-3. MedBook returns a list of patients matching at least one keyword.
-4. The user views the list of matching patients.
-
-**Extensions**
-
-- 3a. No matches found.
-  - 3a1. MedBook displays a message: "No matches found. Try using a different keyword."
+### UC01 - Viewing Help
+- **Actor**: User
+- **System**: MedBook
+- **Main Success Scenario (MSS)**:
+  - User requests for help.
+  - MedBook displays help information.
   - Use case ends.
 
-_{More to be added}_
+### UC02 - Adding a Patient
+- **Actor**: User
+- **System**: MedBook
+- **Main Success Scenario (MSS)**:
+  1. User selects the option to add a new patient.
+  2. MedBook prompts the user to enter the patient's details.
+  3. User enters the patient's details.
+  4. MedBook validates the input and adds the patient to the list.
+  5. MedBook confirms the addition to the user.
+- **Extensions**:
+  - 3a. User enters invalid patient details.
+    - 3a1. MedBook shows an error message and prompts the user to enter the details again.
+    - Use case resumes at step 3.
 
-### Non-Functional Requirements
+### UC03 - Listing All Patients
+- **Actors**: User (typically a healthcare professional)
+- **Preconditions**: Patient list is displayed and has at least one patient entry.
+- **Main Success Scenario (MSS)**:
+  1. User requests to list patients.
+  2. MedBook shows a list of patients.
+- **Extensions**:
+  - 2a. The list is empty.
+    - 2a1. MedBook informs the user that the list is empty.
+    - Use case ends.
 
-1.  Should work on any _mainstream OS_ as long as it has Java `11` or above installed.
-2.  Should be able to hold up to 1000 patients without a noticeable sluggishness in performance for typical usage.
-3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
-4.  The system should be backward compatible with data produced by earlier versions of the system.
-5.  The system should be usable by a novice who has never used an address book.
+### UC04 - Editing a Patient
+- **Actor**: User
+- **System**: MedBook
+- **Main Success Scenario (MSS)**:
+  1. User lists all patients (UC03).
+  2. User provides patient ID, detail field, and updated patient details.
+  3. MedBook updates the patient entry.
+  4. MedBook shows successful edit details.
+- **Extensions**:
+  - 2a. User gives an invalid input in any field.
+    - 2a1. MedBook shows an error message.
+    - Use case ends.
 
-_{More to be added}_
+### UC05 - Locating a Specific Patient
+- **Actor**: User
+- **System**: MedBook
+- **Main Success Scenario (MSS)**:
+  1. User requests to search for a patient.
+  2. MedBook prompts the user to enter search criteria.
+  3. User enters search criteria.
+  4. MedBook performs a search and displays matching patients.
+- **Extensions**:
+  - 4a. No matches found.
+    - 4a1. MedBook informs the user that there were no matches.
+    - Use case ends.
 
-### Glossary
+### UC06 - Delete a Patient
+- **Actor**: User
+- **System**: MedBook
+- **Main Success Scenario (MSS)**:
+  1. User lists all patients (UC03).
+  2. User requests to delete a specific patient.
+  3. MedBook confirms deletion with the user.
+  4. User confirms.
+  5. MedBook deletes the patient and informs the user.
+- **Extensions**:
+  - 2a. Given ID is invalid.
+    - 2a1. MedBook shows an error message.
+    - Use case ends.
+  - 3a. User cancels the deletion.
+    - Use case ends.
 
-- **Mainstream OS**: Windows, Linux, Unix, OS-X
-- **Private contact detail**: A contact detail that is not meant to be shared with others
+### UC07 - Pin a Patient
+- **Actor**: User
+- **System**: MedBook
+- **Main Success Scenario (MSS)**:
+  1. User lists all patients (UC03).
+  2. User requests to pin a specific patient.
+  3. MedBook pins the patient and informs the user.
+- **Extensions**:
+  - 2a. Given ID is invalid.
+    - 2a1. MedBook shows an error message.
+    - Use case ends.
+
+### UC08 - Searching for Patients
+- **Actor**: User
+- **System**: MedBook
+- **Main Success Scenario (MSS)**:
+  1. User initiates a patient search using specific keywords.
+  2. MedBook performs a case-insensitive search.
+  3. MedBook returns a list of matching patients.
+  4. User views the list.
+- **Extensions**:
+  - 3a. No matches found.
+    - 3a1. MedBook displays a message: "No matches found."
+    - Use case ends.
 
 ---
 
-## **Appendix: Instructions for manual testing**
+## Non-Functional Requirements
 
-Given below are instructions to test the app manually.
+1. Should work on any mainstream OS with Java 11 or above.
+   - Rationale: Ensures accessibility for users on different platforms.
+   - Metric: Application functions correctly on Windows, macOS, and Linux.
+2. Supports up to 1000 patients without performance issues.
+   - Rationale: Ensures scalability for clinics and hospitals.
+   - Metric: Application performs smoothly with a database of 1000 patients.
+3. Faster operation with commands than mouse for proficient typists.
+   - Rationale: Enhances productivity for users familiar with the command line.
+   - Metric: Common tasks are completed faster using keyboard shortcuts than GUI.
+4. Backward compatible with data from previous versions.
+   - Rationale: Ensures smooth transition for existing users upgrading to a new version.
+   - Metric: Users can open and interact with data files from previous versions without issues.
+5. Usable by novices.
+   - Rationale: Ensures the application is accessible to new users.
+   - Metric: New users can perform basic tasks without referring to the user manual.
+6. Ensures data integrity and security.
+   - Rationale: Protects patient data from corruption and unauthorized access.
+   - Metric: Application employs data validation, encryption, and access controls.
+7. Provides comprehensive error messages and guidance for recovery.
+   - Rationale: Helps users understand what went wrong and how to fix it.
+   - Metric: Error messages include a description of the issue and steps for resolution.
+8. Responsive design that adjusts to different screen sizes and resolutions.
+   - Rationale: Ensures usability across various devices.
+   - Metric: UI elements are usable and aesthetically pleasing on screens ranging from 13" laptops to 27" monitors.
+9. Regular updates and maintenance.
+   - Rationale: Ensures the application stays up-to-date with the latest features and security patches.
+   - Metric: Application receives updates at least once every three months.
+10. Comprehensive documentation and user guides available.
+    - Rationale: Provides users with resources to understand and use the application effectively.
+    - Metric: Documentation covers all features, includes screenshots, and is easy to navigate.
 
-<box type="info" seamless>
+---
 
-**Note:** These instructions only provide a starting point for testers to work on;
-testers are expected to do more _exploratory_ testing.
+## Glossary
 
-</box>
+- **Mainstream OS**: Popular operating systems such as Windows, Linux, Unix, and OS-X.
 
-### Launch and shutdown
+- **Private Contact Detail**: Any contact-related information that is meant to remain confidential and not be disclosed to unauthorized individuals.
 
-1. Initial launch
+- **CLI (Command Line Interface)**: A user interface that allows users to interact with the software using text commands via a console or terminal.
 
-   1. Download the jar file and copy into an empty folder
+- **GUI (Graphical User Interface)**: A user interface that allows users to interact with the software through graphical icons and visual indicators, as opposed to text-based interfaces.
 
-   1. Double-click the jar file Expected: Shows the GUI with a set of sample contacts. The window size may not be optimum.
+- **Patient ID**: A unique identifier assigned to each patient for quick and error-free retrieval of their records.
 
-1. Saving window preferences
+- **Streamlined Workflow**: A smooth, efficient workflow designed to minimize unnecessary steps and optimize productivity.
 
-   1. Resize the window to an optimum size. Move the window to a different location. Close the window.
+- **Backward Compatibility**: The ability of the system to work with data and interfaces from earlier versions of the software.
 
-   1. Re-launch the app by double-clicking the jar file.<br>
-      Expected: The most recent window size and location is retained.
+- **Healthcare Professional**: An individual who provides healthcare services, such as doctors, nurses, and medical staff.
 
-1. _{ more test cases …​ }_
+- **Typical Usage**: The standard or most common way that the software is utilized by the end-users.
 
-### Deleting a patient
+- **Usability**: The ease with which users can learn to use the software and the efficiency they can achieve.
 
-1. Deleting a patient while all patients are being shown
+- **Performance Issues**: Any lag, delay, or inefficiency in the software’s response or processing time, especially noticeable when handling a large amount of data.
 
-   1. Prerequisites: List all patients using the `list` command. Multiple patients in the list.
+- **Search Algorithm**: The method used by the software to search for and retrieve patient information based on input keywords or parameters.
 
-   1. Test case: `delete 1`<br>
-      Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+- **Error Message**: A notification displayed by the software to inform the user that an error has occurred, often accompanied by information on how to resolve the issue.
 
-   1. Test case: `delete 0`<br>
-      Expected: No patient is deleted. Error details shown in the status message. Status bar remains the same.
+- **User**: An individual who interacts with the software, typically a healthcare professional in this context.
 
-   1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
-      Expected: Similar to previous.
+- **Patient Information**: Data related to a patient, including but not limited to their personal details, medical history, contact information, and any other relevant information.
 
-1. _{ more test cases …​ }_
+- **Case-Insensitive Search**: A type of search that does not differentiate between uppercase and lowercase letters, ensuring that results are returned regardless of the case used in the search query.
 
-### Saving data
+- **Data Compatibility**: The ability of the software to properly read, interpret, and use data formatted or created in other versions or different configurations.
 
-1. Dealing with missing/corrupted data files
+- **Novice User**: A user with limited experience and knowledge of the software or similar applications.
 
-   1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+Adding to the glossary ensures that all potential users, regardless of their level of expertise, have a resource to refer to when they come across terms they are unfamiliar with. This helps in making the software more accessible and user-friendly.
 
-1. _{ more test cases …​ }_
+
+---
+
+## Documentation, Logging, Testing, Configuration, Dev-Ops
+
+- [Documentation guide](Documentation.md)
+- [Testing guide](Testing.md)
+- [Logging guide](Logging.md)
+- [Configuration guide](Configuration.md)
+- [DevOps guide](DevOps.md)
+
+---
+## Appendix: Requirements
+
+### Product Scope
+
+**Target User Profile**:
+
+- **Primary Users**: Doctors and healthcare professionals who handle a substantial number of patients on a regular basis.
+- **Platform Preference**: Has a strong inclination towards using desktop applications, particularly those that support command line interfaces (CLI).
+- **Technical Proficiency**: Is adept at utilizing CLI applications and prefers them for their speed and efficiency.
+
+**Value Proposition**:
+
+- **Efficient Patient Management**: Provides a streamlined and efficient solution for managing patient information, ensuring that healthcare professionals can access and modify patient data quickly.
+- **Speed and Accessibility**: Designed to be significantly faster than conventional GUI applications, allowing users to execute commands and retrieve patient information in a matter of seconds.
+- **Command Line Efficiency**: Leverages the power of CLI to offer advanced users the ability to perform tasks in a more direct and efficient manner, while still maintaining accessibility for those who prefer graphical interfaces.
+
+
+## Appendix: Instructions for Manual Testing
+
+### Launch and Shutdown
+
+#### Initial Launch
+1. Download and place the jar file in an empty folder.
+2. Double-click the jar file.
+   - Expected: GUI opens with sample contacts.
+
+#### Saving Window Preferences
+1. Resize and reposition the window, then close it.
+2. Reopen the application.
+   - Expected: Window retains its size and position.
+
+---
+
+### Deleting a Person
+
+#### When All Persons are Shown
+1. Prerequisites: Use `list` to show all persons.
+2. Test Case: `delete 1`
+   - Expected: First contact deleted, details shown in status message.
+3. Test Case: `delete 0`
+   - Expected: Error message displayed, status bar unchanged.
+4. Other Test Cases: `delete`, `delete x` (where x > list size)
+   - Expected: Error message displayed, status bar unchanged.
+
+---
+
+### Saving Data
+
+#### Dealing with Missing/Corrupted Data Files
+1. _[Provide instructions and expected behavior]_
+
+---
+
+### Adding a New Patient
+
+#### Standard Procedure
+1. Test Case: `add John Doe; Age: 30; Address: 123 Main St`
+   - Expected: New patient "John Doe" is added to the list, details are shown in status message.
+2. Test Case: `add; Age: 30; Address: 123 Main St`
+   - Expected: Error message displayed, patient not added.
+3. Test Case: `add John Doe; Age: thirty; Address: 123 Main St`
+   - Expected: Error message displayed, patient not added.
+
+---
+
+### Editing a Patient's Details
+
+#### When the Patient Exists
+1. Prerequisites: Ensure the patient list is displayed and contains the entry you wish to edit.
+2. Test Case: `edit 1; Age: 35`
+   - Expected: Patient at index 1 has their age updated to 35. Details shown in status message.
+3. Test Case: `edit x; Age: 35` (where x > list size)
+   - Expected: Error message displayed, patient's details unchanged.
+
+---
+
+### Searching for Patients
+
+#### When There Are Matching Entries
+1. Prerequisites: Ensure the patient list contains entries that will match your search term.
+2. Test Case: `search John`
+   - Expected: List of patients with "John" in their name or details is displayed.
+
+---
+
+### Verifying Patient Data Integrity
+
+#### After Operations
+1. Prerequisites: Perform operations like adding, deleting, and editing patients.
+2. Navigate to the folder where data is stored and open the data file.
+   - Expected: All changes should be accurately reflected in the data file.
+
+---
+
+### Handling Invalid Commands
+
+#### Input Mistakes
+1. Test Case: `ad John Doe; Age: 30; Address: 123 Main St`
+   - Expected: Error message displayed, suggesting the correct command format.
+2. Test Case: `delet 1`
+   - Expected: Error message displayed, suggesting the correct command format.
+
+---
+
+These additional sections aim to cover more aspects of the application, providing a thorough guideline for manual testing. Each section outlines the prerequisites, the test cases, and the expected outcomes to guide testers through the process.

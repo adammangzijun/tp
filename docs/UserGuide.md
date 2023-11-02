@@ -6,54 +6,148 @@
 
 # User Guide
 
-Medbook is a **desktop application** crafted specifically for **doctors** and **medical administrative assistants** to manage patient details and medical records.
+## Streamline Patient Management and Medical Records with Just a Few Taps!
 
-Our address book offers a streamlined interface for tracking patient details and medical records, ensuring that vital information is organized, accessible, and secure at all times.
+Medbook is a **desktop application** crafted specifically for **doctors** and **medical administrative assistants** of private clinics to manage patient details and medical records.
+
+Medbook provides a streamlined and user-friendly interface that empowers doctors and medical administrative assistants to effortlessly track patient details and medical records. This ensures that critical information is well-organized, easily accessible, and fully secure for your peace of mind.
+
+Here's how Medbook can streamline your tasks:
+
+- Quickly save, edit, and remove patient details.
+- Effortlessly handle patient appointments and records.
+- Search for specific information in a snap.
+- Get a comprehensive view of patient data, medical records, and appointments at a glance.
+
+Discover the power of Medbook:
+
+- **Digitalize Your Clinic**: Effortlessly transition to a digital clinic with our user-friendly features.
+- **Optimized for Speed**: Medbook offers both a Command Line Interface (CLI) and an intuitive Graphical User Interface, making it ideal for fast typists like you.
+- **QuickStart**: New to Medbook? Click [here](#quick-start-) to start your journey.
 
 <!-- * Table of Contents -->
 <page-nav-print />
 
 ---
 
+
 ## How to Navigate the User Guide
 
-This user guide serves to provide clear instructions and insights, empowering users to effectively utilize all features and functionalities with confidence and ease.
+Welcome to the Medbook User Guide! Our goal is to empower you with the knowledge and confidence to make the most of Medbook's features.
 
-The table of contents can be used at the side to seamlessly jump between sections.
+- **Effortless Navigation**: Use the table of contents for seamless navigation between sections.
+- **Quick Start for New Users**: If you're new to Medbook, start with the [Quick Start](#quick-start-) section to get up and running.
+- **Explore Features**: For those who have already set up Medbook, dive into the [Features](#features) section to discover all that our application has to offer.
 
-## Quick start
+We're here to make your experience as user-friendly as possible. Let's get started!
+
+## Quick start 
 
 1. Ensure you have Java `11` or above installed in your Computer.
    - [How do I check my version of Java?](#faq)
-2. Download the latest jar file (`medbook.jar`) from [here](https://github.com/AY2324S1-CS2103T-T12-4/tp/releases).
+1. Download the latest jar file (`medbook.jar`) from our [github release](https://github.com/AY2324S1-CS2103T-T12-4/tp/releases).
 
-3. Move the file to the folder you want to use as the _home folder_ for your MedBook.
+1. Move the jar file to the folder you want to store the data of the patients.
 
-4. Open a command terminal
-   - For Windows Users:
-     - Press the Windows icon and search for and open up`Powershell`.
-   - For Mac Users:
-     - Open a new Terminal window (Command + Space > type Terminal > Enter).
+    - Create a folder with your preferred name (you can call it Medbook) where you would like to house the application.
+    - Move the downloaded jar file to the folder as shown below.
+      - For Mac users:![Ui](images/MacUserDir.png)
+      - For Windows users:![Ui](images/WinUserDir.png)
 
-Navigate to the folder you put the jar file in using `cd` and use the `java -jar medbook.jar` command to run the application.
+1. Run Medbook application
+
+    - **On Windows**:
+      - Double-click medbook.jar to run the application.
+      - If the GUI doesn't show up, try the following operations.
+      - **Open PowerShell**: Search for "Powershell" in the Windows search bar and open it.
+      - Navigate to the folder where you have stored the jar file using the cd command.
+      - Enter java -jar medbook.jar and press Enter. This command will execute the application.<br> 
+      <box type="info" seamless>
+        Please note that for Windows users, you can navigate to the folder where you house Medbook. In the file address bar, click on the path to the current folder to highlight it. Type powershell and press enter. This will open a PowerShell window with the current folder as the working directory.
+      </box>
+   
+    - **On Mac**:
+      - **Open Terminal**: You can find Terminal in the "Utilities" folder within the "Applications" folder. Or, you can use Spotlight Search by pressing Command + Spacebar and typing "Terminal."
+      - Navigate to the folder where you have stored the jar file using the cd command
+      - Run the Application: Enter java -jar medbook.jar and press Enter. This command will execute the application.<br>
+      <box type="info" seamless>
+        Please note that for Mac users,  in the Terminal on a Mac, you can also drag and drop the "medbook.jar" file directly into the Terminal window after typing `java -jar` to auto-fill the file path.
+      </box>
 
 The application should open up similar to the image below.
 ![Ui](images/MedBookUi.png)
+1. Learn more about navigating the GUI [here](#navigating-the-graphical-user-interface-gui).
+2. For new users, learn how to use Medbook [here](#medbook-tutorial).
+3. For advanced users, view all the available features [here](#features).
 
-5. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
-   Some example commands you can try:
+## Glossary
 
-   - `list` : Lists all patients.
+### Definitions
 
-   - `addpatient n/John Doe i/T1234567A e/johndoe@gmail.com p/12345678 g/M a/26 bt/AB+ al/Penicillin` : Adds a new patient named John Doe with important information about the patient
+Here are some description of the terms used throughout this user guide.
 
-   - `delete 3` : Deletes the 3rd patient shown in the current list.
+| **Term**      | **Definition**                                                                                                                                                                  |
+|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Parameter     | A parameter allow you to customize the behavior of the command by providing specific values                                                                                     |
+| Command       | A command is a textual input that users type into the command-line interface to communicate with the application                                                                |
+| GUI           | GUI is graphical user interface. It manages the interaction between user and the application and also gives a visual display of Medbook.                                        |
+| GUI component | GUI components are the interactive parts of the application that you can see and interact with. For more information of different GUI components. Please refer to below section |
+| CLI           | CLI or Command Line Interface,  is a text-based way to interact with the application.                                                                                           |
 
-   - `clear` : Deletes all patient.
+## Navigating the Graphical User Interface (GUI)
 
-   - `exit` : Exits the app.
+![Ui Component](images/UiComponent.png)
 
-6. Refer to the [Features](#features) below for details of each command.
+Here is a brief summary of GUI component of the main window of Medbook.
+
+| **Name of component**    | **Description**                                                                                             |
+|--------------------------|-------------------------------------------------------------------------------------------------------------|
+| Menu Bar                 | Contains the help and file drop down menu for Medbook                                                       |
+| Message Display Box      | Display the message of every command. Either can be an error message or success message                     |
+| Patient List             | Contains all the Patient cards stored in Medbook                                                            |
+| Patient information card | Contains information of the Patient including age, blood type, gender, contact information and allergies    |
+| Patient being viewed     | Contains the patient card of currently being viewed patient                                                 |
+| Medical record List      | Contains all the Record card of the patient currently being viewed                                          |
+| Record card              | Contains information of the medical record including appointment date, condition, and prescribed medication |
+| Pinned Patient List      | Contains all the patient cards after command pin                                                            |
+| Command Input Box        | Allow users to input commands                                                                               |
+
+
+![Appointment Window](images/ViewAppointmentWindow.png)
+
+| **Name of component** | **Description**                                                           |
+|-----------------------|---------------------------------------------------------------------------|
+| Appointment card      | Contains information of appointments including name, date and NRIC number |
+| Appointment list      | Holds a list of Appointment card                                          |
+| Calendar              | A calendar that displays appointments at certain date                     |
+| Previous Button       | Shift the month shown in the calendar to previous month                   |
+| Next Button           | Shift the month shown in the calendar to next month                       |
+
+## Medbook Tutorial
+
+1. Launch the Medbook application. You may refer to [here](#quick-start-).
+   - Note on launch, Medbook will populate some sample data.
+
+2. Let us try invoking the help window. Type help in the command box and press Enter to execute it. 
+Please refer to the first section of [feature](#features) to have a more clear understanding of requirements of the parameters. 
+A similar help box as below should pop up.<br> <img src="images/HelpWindow.png" width="300"/>
+3. Now, let us try adding a new patient. In the command box, type in `addpatient n/John Doe e/johndoe@gmail.com p/12345678 g/M a/26 bt/AB+ al/Penicillin` and press Enter. 
+A success message should be displayed.<br><img src="images/AddPatientSuccess.png" width="500"/>
+4. Try adding a few more patient to Medbook by yourself!
+5. Now, let us try adding a record to a patient. In the command box, type in `addrecord 3 d/18-09-2023 1800 c/Fever m/Paracetamol` and press Enter. 
+This will create a new medical record to the third patient shown in the middle column. 
+A similar message output should be shown in the Message Display Box.<br> <img src="images/AddRecordSuccess.png" width="500">
+6. Try adding a few more records to patients in the Medbook by yourself!
+7. Let us view medical records of the first patient. Key in `view 1` to see all the records of the first patient.
+If you haven't added any medical records to the first patient, a similar **Record List** should be shown. 
+<br><img src="images/View.png" height="300"/>
+
+You may now have a basic understanding of this software. Try out the features in the following section on your own and explore the potential of Medbook!
+
+<box type="info" seamless>
+    Take a moment to review these notes on the command format, and it will help you navigate and use Medbook more smoothly!
+</box>
+
 
 ---
 

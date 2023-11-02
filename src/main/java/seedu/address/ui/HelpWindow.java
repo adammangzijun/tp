@@ -9,16 +9,21 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.logic.commands.AddAppointmentCommand;
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.AddRecordCommand;
+import seedu.address.logic.commands.DeleteAppointmentCommand;
 import seedu.address.logic.commands.DeleteCommand;
+import seedu.address.logic.commands.DeleteRecordCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditRecordCommand;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FindCommand;
+import seedu.address.logic.commands.FindRecordCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.PinCommand;
 import seedu.address.logic.commands.UnpinCommand;
+import seedu.address.logic.commands.ViewAppointmentCommand;
 import seedu.address.logic.commands.ViewCommand;
 
 /**
@@ -49,6 +54,16 @@ public class HelpWindow extends UiPart<Stage> {
     @FXML
     private Label editRecord;
     @FXML
+    private Label addAppointment;
+    @FXML
+    private Label viewAppointment;
+    @FXML
+    private Label deleteAppointment;
+    @FXML
+    private Label findRecords;
+    @FXML
+    private Label deleteRecord;
+    @FXML
     private Label list;
     @FXML
     private Label find;
@@ -76,11 +91,16 @@ public class HelpWindow extends UiPart<Stage> {
         editPatient.setText(EditCommand.MESSAGE_USAGE);
         addRecord.setText(AddRecordCommand.MESSAGE_USAGE);
         editRecord.setText(EditRecordCommand.MESSAGE_USAGE);
+        addAppointment.setText(AddAppointmentCommand.MESSAGE_USAGE);
+        viewAppointment.setText(ViewAppointmentCommand.MESSAGE_USAGE);
+        deleteAppointment.setText(DeleteAppointmentCommand.MESSAGE_USAGE);
         pin.setText(PinCommand.MESSAGE_USAGE);
         unpin.setText(UnpinCommand.MESSAGE_USAGE);
         view.setText(ViewCommand.MESSAGE_USAGE);
         delete.setText(DeleteCommand.MESSAGE_USAGE);
+        deleteRecord.setText(DeleteRecordCommand.MESSAGE_USAGE);
         find.setText(FindCommand.MESSAGE_USAGE);
+        findRecords.setText(FindRecordCommand.MESSAGE_USAGE);
         list.setText(ListCommand.COMMAND_WORD + ": " + ListCommand.MESSAGE_SUCCESS);
         exit.setText(ExitCommand.COMMAND_WORD + ": " + ExitCommand.MESSAGE_EXIT_ACKNOWLEDGEMENT);
     }
