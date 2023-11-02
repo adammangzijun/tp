@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.patient.UniquePatientList;
 import seedu.address.model.record.exceptions.DuplicateRecordException;
 import seedu.address.model.record.exceptions.RecordNotFoundException;
 
@@ -48,17 +48,17 @@ public class UniqueRecordListTest {
     }
 
     @Test
-    public void setPerson_nullTargetRecord_throwsNullPointerException() {
+    public void setPatient_nullTargetRecord_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> uniqueRecordList.setRecord(null, FEVER0));
     }
 
     @Test
-    public void setPerson_nullEditedRecord_throwsNullPointerException() {
+    public void setPatient_nullEditedRecord_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> uniqueRecordList.setRecord(FEVER0, null));
     }
 
     @Test
-    public void setPerson_targetPersonNotInList_throwsRecordNotFoundException() {
+    public void setPatient_targetPatientNotInList_throwsRecordNotFoundException() {
         assertThrows(RecordNotFoundException.class, () -> uniqueRecordList.setRecord(FEVER0, FEVER0));
     }
 
@@ -81,7 +81,7 @@ public class UniqueRecordListTest {
     }
 
     @Test
-    public void setPerson_editedRecordIsTheSame_throwsDuplicateRecordException() {
+    public void setPatient_editedRecordIsTheSame_throwsDuplicateRecordException() {
         uniqueRecordList.add(FEVER0);
         uniqueRecordList.add(ALLERGIC_REACTION2);
         assertThrows(DuplicateRecordException.class, () -> uniqueRecordList.setRecord(FEVER0, ALLERGIC_REACTION2));
@@ -125,7 +125,7 @@ public class UniqueRecordListTest {
     }
 
     @Test
-    public void setPersons_list_replacesOwnListWithProvidedList() {
+    public void setPatients_list_replacesOwnListWithProvidedList() {
         uniqueRecordList.add(FEVER0);
         List<Record> recordList = Collections.singletonList(FEVER0);
         uniqueRecordList.setRecords(recordList);
@@ -153,7 +153,7 @@ public class UniqueRecordListTest {
     @Test
     public void equals() {
         assertTrue(uniqueRecordList.equals(uniqueRecordList));
-        assertFalse(uniqueRecordList.equals(new UniquePersonList()));
+        assertFalse(uniqueRecordList.equals(new UniquePatientList()));
     }
 
 }

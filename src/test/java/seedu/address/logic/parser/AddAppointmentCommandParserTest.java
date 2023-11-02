@@ -9,7 +9,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_DATETIME_SLEEP_
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_SLEEP_STUDY;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PATIENT;
 
 import org.junit.jupiter.api.Test;
 
@@ -68,7 +68,7 @@ public class AddAppointmentCommandParserTest {
 
     @Test
     public void parse_allFieldsSpecified_success() {
-        Index targetIndex = INDEX_SECOND_PERSON;
+        Index targetIndex = INDEX_SECOND_PATIENT;
         String userInput = targetIndex.getOneBased() + NAME_DESC_SLEEP_STUDY + DATETIME_DESC_SLEEP_STUDY;
 
         Appointment appointment = new Appointment(new Name(VALID_NAME_SLEEP_STUDY),

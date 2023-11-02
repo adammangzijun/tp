@@ -13,7 +13,7 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.appointment.Appointment;
 import seedu.address.model.appointment.UniqueAppointmentList;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 import seedu.address.model.shared.Nric;
 
 /**
@@ -50,13 +50,13 @@ public class AddAppointmentCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        List<Person> lastShownList = model.getFilteredPersonList();
+        List<Patient> lastShownList = model.getFilteredPatientList();
 
         if (index.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            throw new CommandException(Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
         }
 
-        Person patient = lastShownList.get(index.getZeroBased());
+        Patient patient = lastShownList.get(index.getZeroBased());
         Nric patientId = patient.getNric();
         Appointment newAppointment = new Appointment(toAdd.getName(), toAdd.getDateTime(), patientId);
         if (patient.hasAppointment(newAppointment)) {
@@ -67,11 +67,11 @@ public class AddAppointmentCommand extends Command {
         newAppointmentList.setAppointments(patient.getAppointments());
         newAppointmentList.add(newAppointment);
 
-        Person newPatient = new Person(patient.getName(), patient.getNric(), patient.getEmail(),
+        Patient newPatient = new Patient(patient.getName(), patient.getNric(), patient.getEmail(),
                 patient.getPhone(), patient.getGender(), patient.getAge(), patient.getBloodType(),
                 patient.getAllergies(), patient.getRecords(), newAppointmentList, patient.isPinned());
 
-        model.setPerson(patient, newPatient);
+        model.setPatient(patient, newPatient);
 
         model.resetAppointmentList();
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(newAppointment, newPatient)));

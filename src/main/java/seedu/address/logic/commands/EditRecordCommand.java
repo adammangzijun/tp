@@ -18,7 +18,7 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 import seedu.address.model.record.Condition;
 import seedu.address.model.record.Medication;
 import seedu.address.model.record.Record;
@@ -26,7 +26,7 @@ import seedu.address.model.record.UniqueRecordList;
 import seedu.address.model.shared.DateTime;
 
 /**
- * Edits the details of an existing record of a Person in the address book.
+ * Edits the details of an existing record of a Patient in the address book.
  */
 public class EditRecordCommand extends Command {
 
@@ -52,7 +52,7 @@ public class EditRecordCommand extends Command {
     private final EditRecordCommand.EditRecordDescriptor editRecordDescriptor;
 
     /**
-     * @param patientIndex         index of the person in the filtered person list
+     * @param patientIndex         index of the patient in the filtered patient list
      *                             to edit
      * @param recordIndex          index of the record of the targeted patient
      * @param editRecordDescriptor details to edit the record with
@@ -71,15 +71,15 @@ public class EditRecordCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        List<Person> lastShownPersonList = model.getFilteredPersonList();
+        List<Patient> lastShownPatientList = model.getFilteredPatientList();
 
-        if (patientIndex.getZeroBased() >= lastShownPersonList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        if (patientIndex.getZeroBased() >= lastShownPatientList.size()) {
+            throw new CommandException(Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
         }
 
-        Person personToEdit = lastShownPersonList.get(patientIndex.getZeroBased());
+        Patient patientToEdit = lastShownPatientList.get(patientIndex.getZeroBased());
 
-        UniqueRecordList uniqueRecordList = personToEdit.getRecords();
+        UniqueRecordList uniqueRecordList = patientToEdit.getRecords();
         List<Record> lastShownRecordList = uniqueRecordList.asUnmodifiableObservableList();
 
         if (recordIndex.getZeroBased() >= lastShownRecordList.size()) {
@@ -96,16 +96,16 @@ public class EditRecordCommand extends Command {
         UniqueRecordList newList = new UniqueRecordList();
         newList.setRecords(uniqueRecordList);
         newList.setRecord(recordToEdit, editedRecord);
-        Person editedPerson = createdEditedPerson(personToEdit, newList);
+        Patient editedPatient = createdEditedPatient(patientToEdit, newList);
 
-        if (!personToEdit.isSamePerson(editedPerson) && model.hasPerson(editedPerson)) {
-            throw new CommandException(EditCommand.MESSAGE_DUPLICATE_PERSON);
+        if (!patientToEdit.isSamePatient(editedPatient) && model.hasPatient(editedPatient)) {
+            throw new CommandException(EditCommand.MESSAGE_DUPLICATE_PATIENT);
         }
 
-        model.setPerson(personToEdit, editedPerson);
-        model.updateRecordList(editedPerson);
+        model.setPatient(patientToEdit, editedPatient);
+        model.updateRecordList(editedPatient);
         return new CommandResult(String.format(MESSAGE_EDIT_RECORD_SUCCESS,
-                Messages.format(editedRecord, personToEdit)));
+                Messages.format(editedRecord, patientToEdit)));
     }
 
     /**
@@ -126,15 +126,15 @@ public class EditRecordCommand extends Command {
                 updatedMedications, filePath, patientIndex.getZeroBased());
     }
 
-    private static Person createdEditedPerson(Person personToEdit, UniqueRecordList records) {
-        assert personToEdit != null;
-        Person editedPerson = new Person(personToEdit.getName(), personToEdit.getNric(), personToEdit.getEmail(),
-                personToEdit.getPhone(), personToEdit.getGender(),
-                personToEdit.getAge(), personToEdit.getBloodType(),
-                personToEdit.getAllergies(), records, personToEdit.getAppointments(),
-                personToEdit.isPinned());
+    private static Patient createdEditedPatient(Patient patientToEdit, UniqueRecordList records) {
+        assert patientToEdit != null;
+        Patient editedPatient = new Patient(patientToEdit.getName(), patientToEdit.getNric(), patientToEdit.getEmail(),
+                patientToEdit.getPhone(), patientToEdit.getGender(),
+                patientToEdit.getAge(), patientToEdit.getBloodType(),
+                patientToEdit.getAllergies(), records, patientToEdit.getAppointments(),
+                patientToEdit.isPinned());
 
-        return editedPerson;
+        return editedPatient;
     }
 
     @Override

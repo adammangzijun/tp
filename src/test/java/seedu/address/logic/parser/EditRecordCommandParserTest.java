@@ -18,7 +18,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_CONDITION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PATIENT;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_RECORD;
 
 import org.junit.jupiter.api.Test;
@@ -75,7 +75,7 @@ public class EditRecordCommandParserTest {
         assertParseFailure(parser, "1/1" + INVALID_DATETIME_DESC
                 + VALID_CONDITION_HEAT_STROKE + VALID_MEDICATION_HEAT_STROKE, DateTime.MESSAGE_CONSTRAINTS);
 
-        // while parsing {@code PREFIX_TAG} alone will reset the tags of the {@code Person} being edited,
+        // while parsing {@code PREFIX_TAG} alone will reset the tags of the {@code Patient} being edited,
         // parsing it together with a valid tag results in error
         assertParseFailure(parser, "1/1" + CONDITION_DESC_HEAT_STROKE + CONDITION_DESC_DIARRHEA + CONDITION_EMPTY,
                 Condition.MESSAGE_CONSTRAINTS);
@@ -91,7 +91,7 @@ public class EditRecordCommandParserTest {
 
     @Test
     public void parse_allFieldsSpecified_success() {
-        Index patientIndex = INDEX_FIRST_PERSON;
+        Index patientIndex = INDEX_FIRST_PATIENT;
         Index recordIndex = INDEX_FIRST_RECORD;
         String userInput = patientIndex.getOneBased() + "/" + recordIndex.getOneBased()
                 + DATETIME_DESC_SLEEP_STUDY + CONDITION_DESC_DIARRHEA + MEDICATION_DESC_DIARRHEA;
@@ -107,7 +107,7 @@ public class EditRecordCommandParserTest {
 
     @Test
     public void parse_someFieldsSpecified_success() {
-        Index patientIndex = INDEX_FIRST_PERSON;
+        Index patientIndex = INDEX_FIRST_PATIENT;
         Index recordIndex = INDEX_FIRST_RECORD;
         String userInput = patientIndex.getOneBased() + "/" + recordIndex.getOneBased() + DATETIME_DESC_SLEEP_STUDY;
 
@@ -121,7 +121,7 @@ public class EditRecordCommandParserTest {
     @Test
     public void parse_oneFieldSpecified_success() {
         // dateTime
-        Index patientIndex = INDEX_FIRST_PERSON;
+        Index patientIndex = INDEX_FIRST_PATIENT;
         Index recordIndex = INDEX_FIRST_RECORD;
         String userInput = patientIndex.getOneBased() + "/" + recordIndex.getOneBased() + DATETIME_DESC_SLEEP_STUDY;
         EditRecordCommand.EditRecordDescriptor descriptor = new EditRecordDescriptorBuilder()
@@ -141,7 +141,7 @@ public class EditRecordCommandParserTest {
     @Test
     public void parse_multipleRepeatedFields_failure() {
         // valid followed by invalid
-        Index patientIndex = INDEX_FIRST_PERSON;
+        Index patientIndex = INDEX_FIRST_PATIENT;
         Index recordIndex = INDEX_FIRST_RECORD;
         String userInput = patientIndex.getOneBased() + "/" + recordIndex.getOneBased()
                 + INVALID_DATETIME_DESC + DATETIME_DESC_THYROID_CHECK;
@@ -172,7 +172,7 @@ public class EditRecordCommandParserTest {
 
     @Test
     public void parse_resetConditions_success() {
-        Index patientIndex = INDEX_FIRST_PERSON;
+        Index patientIndex = INDEX_FIRST_PATIENT;
         Index recordIndex = INDEX_FIRST_RECORD;
         String userInput = patientIndex.getOneBased() + "/" + recordIndex.getOneBased() + CONDITION_EMPTY;
 

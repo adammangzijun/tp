@@ -37,7 +37,7 @@ public class AppointmentBuilder {
     }
 
     /**
-     * Sets the {@code Name} of the {@code Person} that we are building.
+     * Sets the {@code Name} of the {@code Patient} that we are building.
      */
     public AppointmentBuilder withName(String name) {
         this.name = new Name(name);

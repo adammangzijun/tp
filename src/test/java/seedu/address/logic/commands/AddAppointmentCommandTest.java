@@ -5,11 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
-import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
+import static seedu.address.logic.commands.CommandTestUtil.showPatientAtIndex;
 import static seedu.address.testutil.Assert.assertThrows;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PATIENT;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PATIENT;
+import static seedu.address.testutil.TypicalPatients.getTypicalAddressBook;
 
 import org.junit.jupiter.api.Test;
 
@@ -22,39 +22,39 @@ import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.appointment.Appointment;
 import seedu.address.model.appointment.UniqueAppointmentList;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 import seedu.address.testutil.AppointmentBuilder;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.PatientBuilder;
 
 public class AddAppointmentCommandTest {
 
     private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
 
     @Test
-    public void constructor_nullPerson_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> new AddAppointmentCommand(INDEX_FIRST_PERSON, null));
+    public void constructor_nullPatient_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> new AddAppointmentCommand(INDEX_FIRST_PATIENT, null));
     }
 
     @Test
     public void execute_validIndexUnfilteredList_success() {
 
-        Person personToAddAppointment = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Appointment validAppointment = new AppointmentBuilder().withNric(personToAddAppointment.getNric().toString())
+        Patient patientToAddAppointment = model.getFilteredPatientList().get(INDEX_FIRST_PATIENT.getZeroBased());
+        Appointment validAppointment = new AppointmentBuilder().withNric(patientToAddAppointment.getNric().toString())
                 .build();
 
-        AddAppointmentCommand addAppointmentCommand = new AddAppointmentCommand(INDEX_FIRST_PERSON, validAppointment);
+        AddAppointmentCommand addAppointmentCommand = new AddAppointmentCommand(INDEX_FIRST_PATIENT, validAppointment);
 
         UniqueAppointmentList newAppointmentList = new UniqueAppointmentList();
-        newAppointmentList.setAppointments(personToAddAppointment.getAppointments());
+        newAppointmentList.setAppointments(patientToAddAppointment.getAppointments());
         newAppointmentList.add(validAppointment);
 
-        Person editedPerson = new PersonBuilder(personToAddAppointment).withAppointments(newAppointmentList).build();
+        Patient editedPatient = new PatientBuilder(patientToAddAppointment).withAppointments(newAppointmentList).build();
 
         String expectedMessage = String.format(AddAppointmentCommand.MESSAGE_SUCCESS,
-                Messages.format(validAppointment, editedPerson));
+                Messages.format(validAppointment, editedPatient));
 
         ModelManager expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.setPerson(model.getFilteredPersonList().get(0), editedPerson);
+        expectedModel.setPatient(model.getFilteredPatientList().get(0), editedPatient);
         expectedModel.resetAppointmentList();
 
         assertCommandSuccess(addAppointmentCommand, model, expectedMessage, expectedModel);
@@ -63,33 +63,33 @@ public class AddAppointmentCommandTest {
     @Test
     public void execute_invalidIndexUnfilteredList_throwsCommandException() {
         Appointment validAppointment = new AppointmentBuilder().build();
-        Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
+        Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPatientList().size() + 1);
         AddAppointmentCommand addAppointmentCommand = new AddAppointmentCommand(outOfBoundIndex, validAppointment);
 
-        assertCommandFailure(addAppointmentCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertCommandFailure(addAppointmentCommand, model, Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
     }
 
     @Test
     public void execute_validIndexFilteredList_success() {
-        showPersonAtIndex(model, INDEX_FIRST_PERSON);
-        Person personToAddAppointment = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Appointment validAppointment = new AppointmentBuilder().withNric(personToAddAppointment.getNric().toString())
+        showPatientAtIndex(model, INDEX_FIRST_PATIENT);
+        Patient patientToAddAppointment = model.getFilteredPatientList().get(INDEX_FIRST_PATIENT.getZeroBased());
+        Appointment validAppointment = new AppointmentBuilder().withNric(patientToAddAppointment.getNric().toString())
                 .build();
 
-        AddAppointmentCommand addAppointmentCommand = new AddAppointmentCommand(INDEX_FIRST_PERSON, validAppointment);
+        AddAppointmentCommand addAppointmentCommand = new AddAppointmentCommand(INDEX_FIRST_PATIENT, validAppointment);
 
         UniqueAppointmentList newAppointmentList = new UniqueAppointmentList();
-        newAppointmentList.setAppointments(personToAddAppointment.getAppointments());
+        newAppointmentList.setAppointments(patientToAddAppointment.getAppointments());
         newAppointmentList.add(validAppointment);
 
-        Person editedPerson = new PersonBuilder(personToAddAppointment).withAppointments(newAppointmentList).build();
+        Patient editedPatient = new PatientBuilder(patientToAddAppointment).withAppointments(newAppointmentList).build();
 
         String expectedMessage = String.format(AddAppointmentCommand.MESSAGE_SUCCESS,
-                Messages.format(validAppointment, editedPerson));
+                Messages.format(validAppointment, editedPatient));
 
         ModelManager expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        showPersonAtIndex(expectedModel, INDEX_FIRST_PERSON);
-        expectedModel.setPerson(model.getFilteredPersonList().get(0), editedPerson);
+        showPatientAtIndex(expectedModel, INDEX_FIRST_PATIENT);
+        expectedModel.setPatient(model.getFilteredPatientList().get(0), editedPatient);
         expectedModel.resetAppointmentList();
 
         assertCommandSuccess(addAppointmentCommand, model, expectedMessage, expectedModel);
@@ -97,23 +97,23 @@ public class AddAppointmentCommandTest {
 
     @Test
     public void execute_invalidIndexFilteredList_throwsCommandException() {
-        showPersonAtIndex(model, INDEX_FIRST_PERSON);
+        showPatientAtIndex(model, INDEX_FIRST_PATIENT);
 
         Appointment validAppointment = new AppointmentBuilder().build();
-        Index outOfBoundIndex = INDEX_SECOND_PERSON;
+        Index outOfBoundIndex = INDEX_SECOND_PATIENT;
         // ensures that outOfBoundIndex is still in bounds of address book list
-        assertTrue(outOfBoundIndex.getZeroBased() < model.getAddressBook().getPersonList().size());
+        assertTrue(outOfBoundIndex.getZeroBased() < model.getAddressBook().getPatientList().size());
 
         AddAppointmentCommand addAppointmentCommand = new AddAppointmentCommand(outOfBoundIndex, validAppointment);
 
-        assertCommandFailure(addAppointmentCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertCommandFailure(addAppointmentCommand, model, Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
     }
 
     @Test
     public void execute_duplicateAppointmentUnfilteredList_failure() {
-        Appointment appointment = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased())
+        Appointment appointment = model.getFilteredPatientList().get(INDEX_FIRST_PATIENT.getZeroBased())
                 .getAppointments().asUnmodifiableObservableList().get(0);
-        AddAppointmentCommand addAppointmentCommand = new AddAppointmentCommand(INDEX_FIRST_PERSON, appointment);
+        AddAppointmentCommand addAppointmentCommand = new AddAppointmentCommand(INDEX_FIRST_PATIENT, appointment);
 
         assertCommandFailure(addAppointmentCommand, model, AddAppointmentCommand.MESSAGE_DUPLICATE_APPOINTMENT);
     }
@@ -123,7 +123,7 @@ public class AddAppointmentCommandTest {
         Appointment eyeExam = new AppointmentBuilder().withName("Eye Exam").build();
         Appointment earExam = new AppointmentBuilder().withName("Ear Exam").build();
 
-        final AddAppointmentCommand standardCommand = new AddAppointmentCommand(INDEX_FIRST_PERSON, eyeExam);
+        final AddAppointmentCommand standardCommand = new AddAppointmentCommand(INDEX_FIRST_PATIENT, eyeExam);
 
         // same object -> returns true
         assertTrue(standardCommand.equals(standardCommand));
@@ -135,10 +135,10 @@ public class AddAppointmentCommandTest {
         assertFalse(standardCommand.equals(new HelpCommand()));
 
         // different index -> returns false
-        assertFalse(standardCommand.equals(new AddAppointmentCommand(INDEX_SECOND_PERSON, eyeExam)));
+        assertFalse(standardCommand.equals(new AddAppointmentCommand(INDEX_SECOND_PATIENT, eyeExam)));
 
         // different descriptor -> returns false
-        assertFalse(standardCommand.equals(new AddAppointmentCommand(INDEX_FIRST_PERSON, earExam)));
+        assertFalse(standardCommand.equals(new AddAppointmentCommand(INDEX_FIRST_PATIENT, earExam)));
     }
 
     @Test

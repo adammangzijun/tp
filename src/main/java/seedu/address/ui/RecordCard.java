@@ -14,7 +14,7 @@ import javafx.stage.FileChooser;
 import seedu.address.model.record.Record;
 
 /**
- * An UI component that displays information of a {@code Record}.
+ * A UI component that displays information of a {@code Record}.
  */
 public class RecordCard extends UiPart<Region> {
 

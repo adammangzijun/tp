@@ -10,8 +10,8 @@ import seedu.address.model.record.RecordContainsKeywordsPredicate;
 
 
 /**
- * Finds and lists all records of a patient in address book that contain any of the arguement keywords.
- * Keyword matching is not case sensitive.
+ * Finds and lists all records of a patient in address book that contain any of the argument keywords.
+ * Keyword matching is not case-sensitive.
  */
 public class FindRecordCommand extends Command {
     public static final String COMMAND_WORD = "searchrecord";

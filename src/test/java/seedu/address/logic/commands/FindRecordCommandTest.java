@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.commons.core.index.Index.fromZeroBased;
 import static seedu.address.logic.Messages.MESSAGE_RECORDS_LISTED_OVERVIEW;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalPatients.getTypicalAddressBook;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,7 +49,7 @@ public class FindRecordCommandTest {
     }
 
     @Test
-    public void execute_zeroKeywords_noPersonFound() throws CommandException {
+    public void execute_zeroKeywords_noPatientFound() throws CommandException {
         String expectedMessage = String.format(MESSAGE_RECORDS_LISTED_OVERVIEW, 0);
         RecordContainsKeywordsPredicate predicate = preparePredicate(" ");
         FindRecordCommand findRecordCommand = new FindRecordCommand(predicate);

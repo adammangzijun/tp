@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PATIENT;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PATIENT;
+import static seedu.address.testutil.TypicalPatients.getTypicalAddressBook;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,9 +19,9 @@ import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.appointment.Appointment;
 import seedu.address.model.appointment.UniqueAppointmentList;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 import seedu.address.model.shared.Nric;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.PatientBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for
@@ -33,25 +33,25 @@ public class DeleteAppointmentCommandTest {
 
     @Test
     public void execute_validIndex_success() {
-        Appointment appointmentToDelete = model.getFilteredAppointmentList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Appointment appointmentToDelete = model.getFilteredAppointmentList().get(INDEX_FIRST_PATIENT.getZeroBased());
         Nric patientNric = appointmentToDelete.getNric();
-        Person personWithAppointment = model.getFilteredPersonList().stream()
-                .filter(person -> person.getNric().equals(patientNric))
+        Patient patientWithAppointment = model.getFilteredPatientList().stream()
+                .filter(patient -> patient.getNric().equals(patientNric))
                 .findFirst()
                 .orElse(null);
-        DeleteAppointmentCommand deleteAppointmentCommand = new DeleteAppointmentCommand(INDEX_FIRST_PERSON);
+        DeleteAppointmentCommand deleteAppointmentCommand = new DeleteAppointmentCommand(INDEX_FIRST_PATIENT);
 
         String expectedMessage = String.format(DeleteAppointmentCommand.MESSAGE_DELETE_APPOINTMENT_SUCCESS,
-                Messages.format(appointmentToDelete, personWithAppointment));
+                Messages.format(appointmentToDelete, patientWithAppointment));
 
         UniqueAppointmentList newAppointmentList = new UniqueAppointmentList();
-        newAppointmentList.setAppointments(personWithAppointment.getAppointments());
+        newAppointmentList.setAppointments(patientWithAppointment.getAppointments());
         newAppointmentList.remove(appointmentToDelete);
 
-        Person editedPerson = new PersonBuilder(personWithAppointment).withAppointments(newAppointmentList).build();
+        Patient editedPatient = new PatientBuilder(patientWithAppointment).withAppointments(newAppointmentList).build();
 
         ModelManager expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.setPerson(personWithAppointment, editedPerson);
+        expectedModel.setPatient(patientWithAppointment, editedPatient);
         expectedModel.resetAppointmentList();
 
         assertCommandSuccess(deleteAppointmentCommand, model, expectedMessage, expectedModel);
@@ -67,30 +67,30 @@ public class DeleteAppointmentCommandTest {
 
     @Test
     public void execute_invalidNric_throwsCommandException() {
-        Appointment appointmentToDelete = model.getFilteredAppointmentList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Appointment appointmentToDelete = model.getFilteredAppointmentList().get(INDEX_FIRST_PATIENT.getZeroBased());
         Nric patientNric = appointmentToDelete.getNric();
-        Person personWithAppointment = model.getFilteredPersonList().stream()
-                .filter(person -> person.getNric().equals(patientNric))
+        Patient patientWithAppointment = model.getFilteredPatientList().stream()
+                .filter(patient -> patient.getNric().equals(patientNric))
                 .findFirst()
                 .orElse(null);
-        DeleteAppointmentCommand deleteAppointmentCommand = new DeleteAppointmentCommand(INDEX_FIRST_PERSON);
+        DeleteAppointmentCommand deleteAppointmentCommand = new DeleteAppointmentCommand(INDEX_FIRST_PATIENT);
 
-        Person newPerson = new PersonBuilder(personWithAppointment).withNric("S9999999A").build();
-        model.setPerson(personWithAppointment, newPerson);
+        Patient newPatient = new PatientBuilder(patientWithAppointment).withNric("S9999999A").build();
+        model.setPatient(patientWithAppointment, newPatient);
 
         assertCommandFailure(deleteAppointmentCommand, model, DeleteAppointmentCommand.MESSAGE_INVALID_NRIC);
     }
 
     @Test
     public void equals() {
-        DeleteAppointmentCommand deleteFirstCommand = new DeleteAppointmentCommand(INDEX_FIRST_PERSON);
-        DeleteAppointmentCommand deleteSecondCommand = new DeleteAppointmentCommand(INDEX_SECOND_PERSON);
+        DeleteAppointmentCommand deleteFirstCommand = new DeleteAppointmentCommand(INDEX_FIRST_PATIENT);
+        DeleteAppointmentCommand deleteSecondCommand = new DeleteAppointmentCommand(INDEX_SECOND_PATIENT);
 
         // same object -> returns true
         assertTrue(deleteFirstCommand.equals(deleteFirstCommand));
 
         // same values -> returns true
-        DeleteAppointmentCommand deleteFirstCommandCopy = new DeleteAppointmentCommand(INDEX_FIRST_PERSON);
+        DeleteAppointmentCommand deleteFirstCommandCopy = new DeleteAppointmentCommand(INDEX_FIRST_PATIENT);
         assertTrue(deleteFirstCommand.equals(deleteFirstCommandCopy));
 
         // different types -> returns false
@@ -99,7 +99,7 @@ public class DeleteAppointmentCommandTest {
         // null -> returns false
         assertFalse(deleteFirstCommand.equals(null));
 
-        // different person -> returns false
+        // different patient -> returns false
         assertFalse(deleteFirstCommand.equals(deleteSecondCommand));
     }
 

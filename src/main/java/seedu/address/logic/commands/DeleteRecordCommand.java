@@ -7,7 +7,7 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 import seedu.address.model.record.Record;
 import seedu.address.model.record.UniqueRecordList;
 
@@ -38,12 +38,12 @@ public class DeleteRecordCommand extends Command {
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
-        List<Person> lastShownList = model.getFilteredPersonList();
+        List<Patient> lastShownList = model.getFilteredPatientList();
 
         if (targetPatientIndex.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            throw new CommandException(Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
         }
-        Person targetPatient = lastShownList.get(targetPatientIndex.getZeroBased());
+        Patient targetPatient = lastShownList.get(targetPatientIndex.getZeroBased());
         UniqueRecordList newRecordsList = new UniqueRecordList();
         newRecordsList.setRecords(targetPatient.getRecords());
 
@@ -53,11 +53,11 @@ public class DeleteRecordCommand extends Command {
 
         Record targetRecord = newRecordsList.get(targetRecordIndex.getZeroBased());
         newRecordsList.remove(targetRecord);
-        Person patientWithDeletedRecord = new Person(targetPatient.getName(), targetPatient.getNric(),
+        Patient patientWithDeletedRecord = new Patient(targetPatient.getName(), targetPatient.getNric(),
                 targetPatient.getEmail(), targetPatient.getPhone(), targetPatient.getGender(), targetPatient.getAge(),
                 targetPatient.getBloodType(), targetPatient.getAllergies(), newRecordsList,
                 targetPatient.getAppointments(), targetPatient.isPinned());
-        model.setPerson(targetPatient, patientWithDeletedRecord);
+        model.setPatient(targetPatient, patientWithDeletedRecord);
         model.updateRecordList(patientWithDeletedRecord);
         return new CommandResult(String.format(MESSAGE_DELETE_RECORD_SUCCESS,
                 Messages.format(targetRecord, targetPatient)));

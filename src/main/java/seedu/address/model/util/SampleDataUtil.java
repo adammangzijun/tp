@@ -9,13 +9,8 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.appointment.Appointment;
 import seedu.address.model.appointment.UniqueAppointmentList;
-import seedu.address.model.person.Age;
-import seedu.address.model.person.Allergy;
-import seedu.address.model.person.BloodType;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Gender;
-import seedu.address.model.person.Person;
-import seedu.address.model.person.Phone;
+import seedu.address.model.patient.*;
+import seedu.address.model.patient.Patient;
 import seedu.address.model.record.Condition;
 import seedu.address.model.record.Medication;
 import seedu.address.model.record.Record;
@@ -28,9 +23,9 @@ import seedu.address.model.shared.Nric;
  * Contains utility methods for populating {@code AddressBook} with sample data.
  */
 public class SampleDataUtil {
-    public static Person[] getSamplePersons() {
-        return new Person[] {
-            new Person(new Name("Alex Yeoh"), new Nric("S1234569A"),
+    public static Patient[] getSamplePatients() {
+        return new Patient[] {
+            new Patient(new Name("Alex Yeoh"), new Nric("S1234569A"),
                     new Email("alexyeoh@example.com"), new Phone("87438807"),
                     new Gender("M"), new Age(12), new BloodType("A+"),
                     getAllergySet("Peanuts"),
@@ -41,27 +36,27 @@ public class SampleDataUtil {
                             new DateTime("01-01-2001 1200"),
                             new Nric("S1234569A"))),
                     true),
-            new Person(new Name("Bernice Yu"), new Nric("T1234567A"),
+            new Patient(new Name("Bernice Yu"), new Nric("T1234567A"),
                     new Email("berniceyu@example.com"), new Phone("99272758"),
                     new Gender("F"), new Age(31), new BloodType("B+"),
                     getAllergySet("Dust", "Peanuts"),
                     new UniqueRecordList(), new UniqueAppointmentList(), false),
-            new Person(new Name("Charlotte Oliveiro"), new Nric("S7654321A"),
+            new Patient(new Name("Charlotte Oliveiro"), new Nric("S7654321A"),
                     new Email("charlotte@example.com"), new Phone("93210283"),
                     new Gender("F"), new Age(12), new BloodType("AB+"),
                     getAllergySet("Dust"),
                     new UniqueRecordList(), new UniqueAppointmentList(), false),
-            new Person(new Name("David Li"), new Nric("T1234567C"),
+            new Patient(new Name("David Li"), new Nric("T1234567C"),
                     new Email("lidavid@example.com"), new Phone("91031282"),
                     new Gender("M"), new Age(33), new BloodType("O-"),
                     getAllergySet("Pollen"), new UniqueRecordList(),
                     new UniqueAppointmentList(), false),
-            new Person(new Name("Irfan Ibrahim"), new Nric("S5671234A"),
+            new Patient(new Name("Irfan Ibrahim"), new Nric("S5671234A"),
                     new Email("irfan@example.com"), new Phone("92492021"),
                     new Gender("M"), new Age(21), new BloodType("B-"),
                     getAllergySet("Fur"), new UniqueRecordList(),
                     new UniqueAppointmentList(), false),
-            new Person(new Name("Roy Balakrishnan"), new Nric("T1234567Z"),
+            new Patient(new Name("Roy Balakrishnan"), new Nric("T1234567Z"),
                     new Email("royb@example.com"), new Phone("92624417"),
                     new Gender("M"), new Age(24), new BloodType("B+"),
                     getAllergySet("Grass"), new UniqueRecordList(),
@@ -71,12 +66,10 @@ public class SampleDataUtil {
 
     public static ReadOnlyAddressBook getSampleAddressBook() {
         AddressBook sampleAb = new AddressBook();
-        for (Person samplePerson : getSamplePersons()) {
-            sampleAb.addPerson(samplePerson);
+        for (Patient samplePatient : getSamplePatients()) {
+            sampleAb.addPatient(samplePatient);
         }
-        // for (Appointment sampleAppointment : getSampleAppointments()) {
-        // sampleAb.addAppointment(sampleAppointment);
-        // }
+
         return sampleAb;
     }
 

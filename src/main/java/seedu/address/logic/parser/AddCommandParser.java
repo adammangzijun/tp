@@ -16,13 +16,13 @@ import java.util.stream.Stream;
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.appointment.UniqueAppointmentList;
-import seedu.address.model.person.Age;
-import seedu.address.model.person.Allergy;
-import seedu.address.model.person.BloodType;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Gender;
-import seedu.address.model.person.Person;
-import seedu.address.model.person.Phone;
+import seedu.address.model.patient.Age;
+import seedu.address.model.patient.Allergy;
+import seedu.address.model.patient.BloodType;
+import seedu.address.model.patient.Email;
+import seedu.address.model.patient.Gender;
+import seedu.address.model.patient.Patient;
+import seedu.address.model.patient.Phone;
 import seedu.address.model.record.UniqueRecordList;
 import seedu.address.model.shared.Name;
 import seedu.address.model.shared.Nric;
@@ -60,10 +60,10 @@ public class AddCommandParser implements Parser<AddCommand> {
         BloodType bloodType = ParserUtil.parseBloodType(argMultimap.getValue(PREFIX_BLOODTYPE).get());
         Set<Allergy> allergies = ParserUtil.parseAllergies(argMultimap.getAllValues(PREFIX_ALLERGIES));
 
-        Person person = new Person(name, nric, email, phone, gender, age, bloodType, allergies,
+        Patient patient = new Patient(name, nric, email, phone, gender, age, bloodType, allergies,
                 new UniqueRecordList(), new UniqueAppointmentList(), false);
 
-        return new AddCommand(person);
+        return new AddCommand(patient);
     }
 
     /**

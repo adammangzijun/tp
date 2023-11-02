@@ -60,7 +60,7 @@
                     </VBox>
                     <VBox>
 
-                        <VBox fx:id="personList" styleClass="pane-with-border" minWidth="340"
+                        <VBox fx:id="patientList" styleClass="pane-with-border" minWidth="340"
                             prefWidth="600"
                             VBox.vgrow="ALWAYS">
                             <padding>
@@ -71,7 +71,7 @@
 
                     </VBox>
 
-                    <VBox fx:id="pinnedPersonList" styleClass="pane-with-border" minWidth="340"
+                    <VBox fx:id="pinnedPatientList" styleClass="pane-with-border" minWidth="340"
                         prefWidth="340" VBox.vgrow="ALWAYS">
                         <Label text="PINNED PATIENT" styleClass="cell_big_label"
                             style="-fx-text-fill:#FFFF" />

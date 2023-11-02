@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PATIENT;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PATIENT;
+import static seedu.address.testutil.TypicalPatients.getTypicalAddressBook;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 
 public class ViewCommandTest {
 
@@ -24,33 +24,33 @@ public class ViewCommandTest {
 
     @Test
     public void executeValidIndex_success() {
-        Person personToView = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        ViewCommand viewCommand = new ViewCommand(INDEX_FIRST_PERSON);
+        Patient patientToView = model.getFilteredPatientList().get(INDEX_FIRST_PATIENT.getZeroBased());
+        ViewCommand viewCommand = new ViewCommand(INDEX_FIRST_PATIENT);
 
-        String expectedMessage = String.format(ViewCommand.MESSAGE_VIEW_PERSON_SUCCESS, Messages.format(personToView));
+        String expectedMessage = String.format(ViewCommand.MESSAGE_VIEW_PATIENT_SUCCESS, Messages.format(patientToView));
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
 
-        expectedModel.setPerson(model.getFilteredPersonList().get(0), personToView);
-        expectedModel.updateRecordList(personToView);
+        expectedModel.setPatient(model.getFilteredPatientList().get(0), patientToView);
+        expectedModel.updateRecordList(patientToView);
         assertCommandSuccess(viewCommand, model, expectedMessage, expectedModel);
     }
 
     @Test
     public void executeInvalidIndex_throwsCommandException() {
-        Index indexOutOfBounds = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
+        Index indexOutOfBounds = Index.fromOneBased(model.getFilteredPatientList().size() + 1);
         ViewCommand viewCommand = new ViewCommand(indexOutOfBounds);
 
-        assertCommandFailure(viewCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertCommandFailure(viewCommand, model, Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
     }
 
     @Test
     public void execute_validIndexRecordList_success() {
 
-        Person personToView = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        ViewCommand viewCommand = new ViewCommand(INDEX_FIRST_PERSON);
+        Patient patientToView = model.getFilteredPatientList().get(INDEX_FIRST_PATIENT.getZeroBased());
+        ViewCommand viewCommand = new ViewCommand(INDEX_FIRST_PATIENT);
 
-        String expectedMessage = String.format(ViewCommand.MESSAGE_VIEW_PERSON_SUCCESS,
-                Messages.format(personToView));
+        String expectedMessage = String.format(ViewCommand.MESSAGE_VIEW_PATIENT_SUCCESS,
+                Messages.format(patientToView));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         try {
@@ -65,13 +65,13 @@ public class ViewCommandTest {
     }
 
     @Test
-    public void execute_validIndexSamePerson_success() {
+    public void execute_validIndexSamePatient_success() {
 
-        Person personToView = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        ViewCommand viewCommand = new ViewCommand(INDEX_FIRST_PERSON);
+        Patient patientToView = model.getFilteredPatientList().get(INDEX_FIRST_PATIENT.getZeroBased());
+        ViewCommand viewCommand = new ViewCommand(INDEX_FIRST_PATIENT);
 
-        String expectedMessage = String.format(ViewCommand.MESSAGE_VIEW_PERSON_SUCCESS,
-                Messages.format(personToView));
+        String expectedMessage = String.format(ViewCommand.MESSAGE_VIEW_PATIENT_SUCCESS,
+                Messages.format(patientToView));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         try {
@@ -81,21 +81,21 @@ public class ViewCommandTest {
             return;
         }
 
-        samePersonViewed(model, expectedModel);
+        samePatientViewed(model, expectedModel);
         assertCommandSuccess(viewCommand, model, expectedMessage, expectedModel);
     }
 
     @Test
     public void equals() {
 
-        ViewCommand viewCommand1 = new ViewCommand(INDEX_FIRST_PERSON);
-        ViewCommand viewCommand2 = new ViewCommand(INDEX_SECOND_PERSON);
+        ViewCommand viewCommand1 = new ViewCommand(INDEX_FIRST_PATIENT);
+        ViewCommand viewCommand2 = new ViewCommand(INDEX_SECOND_PATIENT);
 
         // same object -> returns true
         assertTrue(viewCommand1.equals(viewCommand1));
 
         // same values -> returns true
-        ViewCommand viewFirstCommandCopy = new ViewCommand(INDEX_FIRST_PERSON);
+        ViewCommand viewFirstCommandCopy = new ViewCommand(INDEX_FIRST_PATIENT);
         assertTrue(viewCommand1.equals(viewFirstCommandCopy));
 
         // different types -> returns false
@@ -104,7 +104,7 @@ public class ViewCommandTest {
         // null -> returns false
         assertFalse(viewCommand1.equals(null));
 
-        // different person -> returns false
+        // different patient -> returns false
         assertFalse(viewCommand1.equals(viewCommand2));
     }
 
@@ -112,7 +112,7 @@ public class ViewCommandTest {
         assertTrue(model1.getRecordList().equals(model2.getRecordList()));
     }
 
-    private void samePersonViewed(Model model1, Model model2) {
-        assertTrue(model1.getPersonBeingViewed().equals(model2.getPersonBeingViewed()));
+    private void samePatientViewed(Model model1, Model model2) {
+        assertTrue(model1.getPatientBeingViewed().equals(model2.getPatientBeingViewed()));
     }
 }

@@ -12,7 +12,7 @@ import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.appointment.Appointment;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 import seedu.address.model.record.Record;
 
 /**
@@ -22,7 +22,7 @@ public class ModelManager implements Model {
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
     private static ModelManager instance;
     private final AddressBook addressBook;
-    private final FilteredList<Person> filteredPersons;
+    private final FilteredList<Patient> filteredPatients;
     private final FilteredList<Appointment> filteredAppointments;
     private final FilteredList<Record> filteredRecords;
     private final UserPrefs userPrefs;
@@ -37,7 +37,7 @@ public class ModelManager implements Model {
 
         this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
-        filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
+        filteredPatients = new FilteredList<>(this.addressBook.getPatientList());
         filteredAppointments = new FilteredList<>(this.addressBook.getAppointmentList());
         filteredRecords = new FilteredList<>(this.addressBook.getRecordList());
         instance = this;
@@ -104,56 +104,56 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public boolean hasPerson(Person person) {
-        requireNonNull(person);
-        return addressBook.hasPerson(person);
+    public boolean hasPatient(Patient patient) {
+        requireNonNull(patient);
+        return addressBook.hasPatient(patient);
     }
 
     @Override
-    public void deletePerson(Person target) {
-        addressBook.removePerson(target);
+    public void deletePatient(Patient target) {
+        addressBook.removePatient(target);
     }
 
     @Override
-    public void addPerson(Person person) {
-        addressBook.addPerson(person);
-        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+    public void addPatient(Patient patient) {
+        addressBook.addPatient(patient);
+        updateFilteredPatientList(PREDICATE_SHOW_ALL_PATIENTS);
     }
 
     @Override
-    public void setPerson(Person target, Person editedPerson) {
-        requireAllNonNull(target, editedPerson);
-        addressBook.setPerson(target, editedPerson);
+    public void setPatient(Patient target, Patient editedPatient) {
+        requireAllNonNull(target, editedPatient);
+        addressBook.setPatient(target, editedPatient);
     }
 
-    // =========== Filtered Person List Accessors
+    // =========== Filtered Patient List Accessors
     // =============================================================
 
     /**
-     * Returns an unmodifiable view of the list of {@code Person} backed by the
+     * Returns an unmodifiable view of the list of {@code Patient} backed by the
      * internal list of
      * {@code versionedAddressBook}
      */
     @Override
-    public ObservableList<Person> getFilteredPersonList() {
-        return filteredPersons;
+    public ObservableList<Patient> getFilteredPatientList() {
+        return filteredPatients;
     }
 
     @Override
-    public void updateFilteredPersonList(Predicate<Person> predicate) {
+    public void updateFilteredPatientList(Predicate<Patient> predicate) {
         requireNonNull(predicate);
-        filteredPersons.setPredicate(predicate);
+        filteredPatients.setPredicate(predicate);
     }
 
     @Override
-    public ObservableList<Person> getPinnedPersonList() {
-        FilteredList<Person> pinnedPersons = new FilteredList<>(this.addressBook.getPersonList());
-        pinnedPersons.setPredicate(person -> person.isPinned());
-        return pinnedPersons;
+    public ObservableList<Patient> getPinnedPatientList() {
+        FilteredList<Patient> pinnedPatients = new FilteredList<>(this.addressBook.getPatientList());
+        pinnedPatients.setPredicate(patient -> patient.isPinned());
+        return pinnedPatients;
     }
 
     /**
-     * Returns an unmodifiable view of the list of {@code Person} backed by the
+     * Returns an unmodifiable view of the list of {@code Patient} backed by the
      * internal list of
      * {@code versionedAddressBook}
      */
@@ -178,9 +178,9 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public void updateRecordList(Person person) {
-        requireNonNull(person);
-        this.addressBook.setRecords(person);
+    public void updateRecordList(Patient patient) {
+        requireNonNull(patient);
+        this.addressBook.setRecords(patient);
         updateFilteredRecordList(PREDICATE_SHOW_ALL_RECORDS);
     }
 
@@ -191,8 +191,8 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public ObservableList<Person> getPersonBeingViewed() {
-        return this.addressBook.getPersonBeingViewed();
+    public ObservableList<Patient> getPatientBeingViewed() {
+        return this.addressBook.getPatientBeingViewed();
     }
 
     @Override
@@ -209,7 +209,7 @@ public class ModelManager implements Model {
         ModelManager otherModelManager = (ModelManager) other;
         return addressBook.equals(otherModelManager.addressBook)
                 && userPrefs.equals(otherModelManager.userPrefs)
-                && filteredPersons.equals(otherModelManager.filteredPersons)
+                && filteredPatients.equals(otherModelManager.filteredPatients)
                 && filteredAppointments.equals(otherModelManager.filteredAppointments)
                 && filteredRecords.equals(otherModelManager.filteredRecords);
     }

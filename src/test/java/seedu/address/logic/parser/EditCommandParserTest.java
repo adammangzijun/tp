@@ -32,24 +32,24 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_GENDER;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PATIENT;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PATIENT;
+import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PATIENT;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.EditCommand;
-import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
-import seedu.address.model.person.Age;
-import seedu.address.model.person.Allergy;
-import seedu.address.model.person.BloodType;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Gender;
-import seedu.address.model.person.Phone;
+import seedu.address.logic.commands.EditCommand.EditPatientDescriptor;
+import seedu.address.model.patient.Age;
+import seedu.address.model.patient.Allergy;
+import seedu.address.model.patient.BloodType;
+import seedu.address.model.patient.Email;
+import seedu.address.model.patient.Gender;
+import seedu.address.model.patient.Phone;
 import seedu.address.model.shared.Name;
-import seedu.address.testutil.EditPersonDescriptorBuilder;
+import seedu.address.testutil.EditPatientDescriptorBuilder;
 
 public class EditCommandParserTest {
 
@@ -101,7 +101,7 @@ public class EditCommandParserTest {
         assertParseFailure(parser, "1" + INVALID_EMAIL_DESC + VALID_PHONE_AMY, Email.MESSAGE_CONSTRAINTS);
 
         // while parsing {@code PREFIX_TAG} alone will reset the tags of the {@code
-        // Person} being edited,
+        // Patient} being edited,
         // parsing it together with a valid tag results in error
         assertParseFailure(parser, "1" + ALLERGY_DESC_DUST + ALLERGY_DESC_PEANUTS + ALLERGY_EMPTY,
                 Allergy.MESSAGE_CONSTRAINTS);
@@ -118,12 +118,12 @@ public class EditCommandParserTest {
 
     @Test
     public void parse_allFieldsSpecified_success() {
-        Index targetIndex = INDEX_SECOND_PERSON;
+        Index targetIndex = INDEX_SECOND_PATIENT;
         String userInput = targetIndex.getOneBased() + PHONE_DESC_AMY + ALLERGY_DESC_DUST
                 + EMAIL_DESC_AMY + GENDER_DESC_AMY + NAME_DESC_AMY + ALLERGY_DESC_PEANUTS
                 + AGE_DESC_AMY + BLOODTYPE_DESC_AMY;
 
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY)
+        EditCommand.EditPatientDescriptor descriptor = new EditPatientDescriptorBuilder().withName(VALID_NAME_AMY)
                 .withEmail(VALID_EMAIL_AMY).withPhone(VALID_PHONE_AMY).withGender(VALID_GENDER_AMY)
                 .withAge(VALID_AGE_AMY).withBloodType(VALID_BLOODTYPE_AMY)
                 .withAllergies(VALID_ALLERGY_DUST, VALID_ALLERGY_PEANUTS).build();
@@ -134,10 +134,10 @@ public class EditCommandParserTest {
 
     @Test
     public void parse_someFieldsSpecified_success() {
-        Index targetIndex = INDEX_FIRST_PERSON;
+        Index targetIndex = INDEX_FIRST_PATIENT;
         String userInput = targetIndex.getOneBased() + EMAIL_DESC_AMY + PHONE_DESC_AMY;
 
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withEmail(VALID_EMAIL_AMY)
+        EditCommand.EditPatientDescriptor descriptor = new EditPatientDescriptorBuilder().withEmail(VALID_EMAIL_AMY)
                 .withPhone(VALID_PHONE_AMY).build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
 
@@ -147,45 +147,45 @@ public class EditCommandParserTest {
     @Test
     public void parse_oneFieldSpecified_success() {
         // name
-        Index targetIndex = INDEX_THIRD_PERSON;
+        Index targetIndex = INDEX_THIRD_PATIENT;
         String userInput = targetIndex.getOneBased() + NAME_DESC_AMY;
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY).build();
+        EditPatientDescriptor descriptor = new EditPatientDescriptorBuilder().withName(VALID_NAME_AMY).build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // email
         userInput = targetIndex.getOneBased() + EMAIL_DESC_AMY;
-        descriptor = new EditPersonDescriptorBuilder().withEmail(VALID_EMAIL_AMY).build();
+        descriptor = new EditPatientDescriptorBuilder().withEmail(VALID_EMAIL_AMY).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // phone
         userInput = targetIndex.getOneBased() + PHONE_DESC_AMY;
-        descriptor = new EditPersonDescriptorBuilder().withPhone(VALID_PHONE_AMY).build();
+        descriptor = new EditPatientDescriptorBuilder().withPhone(VALID_PHONE_AMY).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // gender
         userInput = targetIndex.getOneBased() + GENDER_DESC_AMY;
-        descriptor = new EditPersonDescriptorBuilder().withGender(VALID_GENDER_AMY).build();
+        descriptor = new EditPatientDescriptorBuilder().withGender(VALID_GENDER_AMY).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // age
         userInput = targetIndex.getOneBased() + AGE_DESC_AMY;
-        descriptor = new EditPersonDescriptorBuilder().withAge(VALID_AGE_AMY).build();
+        descriptor = new EditPatientDescriptorBuilder().withAge(VALID_AGE_AMY).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // bloodType
         userInput = targetIndex.getOneBased() + BLOODTYPE_DESC_AMY;
-        descriptor = new EditPersonDescriptorBuilder().withBloodType(VALID_BLOODTYPE_AMY).build();
+        descriptor = new EditPatientDescriptorBuilder().withBloodType(VALID_BLOODTYPE_AMY).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // tags
         userInput = targetIndex.getOneBased() + ALLERGY_DESC_DUST;
-        descriptor = new EditPersonDescriptorBuilder().withAllergies(VALID_ALLERGY_DUST).build();
+        descriptor = new EditPatientDescriptorBuilder().withAllergies(VALID_ALLERGY_DUST).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
     }
@@ -196,7 +196,7 @@ public class EditCommandParserTest {
         // AddCommandParserTest#parse_repeatedNonTagValue_failure()
 
         // valid followed by invalid
-        Index targetIndex = INDEX_FIRST_PERSON;
+        Index targetIndex = INDEX_FIRST_PATIENT;
         String userInput = targetIndex.getOneBased() + INVALID_PHONE_DESC + PHONE_DESC_BOB;
 
         assertParseFailure(parser, userInput, Messages.getErrorMessageForDuplicatePrefixes(PREFIX_PHONE));
@@ -227,10 +227,10 @@ public class EditCommandParserTest {
 
     @Test
     public void parse_resetTags_success() {
-        Index targetIndex = INDEX_THIRD_PERSON;
+        Index targetIndex = INDEX_THIRD_PATIENT;
         String userInput = targetIndex.getOneBased() + ALLERGY_EMPTY;
 
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withAllergies().build();
+        EditCommand.EditPatientDescriptor descriptor = new EditPatientDescriptorBuilder().withAllergies().build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
 
         assertParseSuccess(parser, userInput, expectedCommand);

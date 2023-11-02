@@ -7,7 +7,7 @@ import static seedu.address.commons.core.index.Index.fromOneBased;
 import static seedu.address.commons.core.index.Index.fromZeroBased;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalPatients.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalRecords.FEVER_AND_COLD0;
 
 import org.junit.jupiter.api.Test;
@@ -18,9 +18,9 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 import seedu.address.model.record.UniqueRecordList;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.PatientBuilder;
 
 
 public class DeleteRecordCommandTest {
@@ -29,36 +29,36 @@ public class DeleteRecordCommandTest {
 
     @Test
     public void execute_validIndices_success() {
-        Person personToDeleteRecord = model.getFilteredPersonList().get(3);
+        Patient patientToDeleteRecord = model.getFilteredPatientList().get(3);
         UniqueRecordList records = new UniqueRecordList();
-        records.setRecords(personToDeleteRecord.getRecords());
+        records.setRecords(patientToDeleteRecord.getRecords());
         records.remove(FEVER_AND_COLD0);
 
-        Person personWithDeletedRecord = new PersonBuilder(personToDeleteRecord).withRecords(records).build();
+        Patient patientWithDeletedRecord = new PatientBuilder(patientToDeleteRecord).withRecords(records).build();
         DeleteRecordCommand deleteRecordCommand = new DeleteRecordCommand(fromZeroBased(3), fromZeroBased(2));
 
         String expectedMessage = String.format(DeleteRecordCommand.MESSAGE_DELETE_RECORD_SUCCESS,
-                Messages.format(FEVER_AND_COLD0, personWithDeletedRecord));
+                Messages.format(FEVER_AND_COLD0, patientWithDeletedRecord));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.setPerson(model.getFilteredPersonList().get(3), personWithDeletedRecord);
-        expectedModel.updateRecordList(personWithDeletedRecord);
+        expectedModel.setPatient(model.getFilteredPatientList().get(3), patientWithDeletedRecord);
+        expectedModel.updateRecordList(patientWithDeletedRecord);
         assertCommandSuccess(deleteRecordCommand, model, expectedMessage, expectedModel);
     }
 
     @Test
     public void execute_invalidPatientIndex_throwsCommandException() {
-        Index outOfBoundPatientIndex = fromOneBased(model.getFilteredPersonList().size() + 1);
+        Index outOfBoundPatientIndex = fromOneBased(model.getFilteredPatientList().size() + 1);
         Index validRecordIndex = fromOneBased(3);
         DeleteRecordCommand deleteRecordCommand = new DeleteRecordCommand(outOfBoundPatientIndex, validRecordIndex);
 
-        assertCommandFailure(deleteRecordCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertCommandFailure(deleteRecordCommand, model, Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
     }
 
     @Test
     public void execute_invalidRecordIndex_throwsCommandException() {
         Index outOfBoundPatientIndex = fromOneBased(4);
-        Index validRecordIndex = fromOneBased(model.getFilteredPersonList().get(3).getRecords().size() + 1);
+        Index validRecordIndex = fromOneBased(model.getFilteredPatientList().get(3).getRecords().size() + 1);
         DeleteRecordCommand deleteRecordCommand = new DeleteRecordCommand(outOfBoundPatientIndex, validRecordIndex);
 
         assertCommandFailure(deleteRecordCommand, model, Messages.MESSAGE_INVALID_RECORD_DISPLAYED_INDEX);

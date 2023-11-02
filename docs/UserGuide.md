@@ -210,13 +210,13 @@ Format: `editpatient PATIENTID PREFIX/NEWVALUE...`
 
 Examples:
 
-- `editdetail 1 e/johndoe_updated@gmail.com` Edits the email address of the 1st person to be **johndoe_updated@gmail.com**. <br>
+- `editdetail 1 e/johndoe_updated@gmail.com` Edits the email address of the 1st patient to be **johndoe_updated@gmail.com**. <br>
 
-- `editdetail 2 p/92345678` Edits the name of the 2nd person to be **92345678**. <br>
+- `editdetail 2 p/92345678` Edits the name of the 2nd patient to be **92345678**. <br>
 
-- `editdetail 3 al/aspirin` Edits the allergy of the 3rd person to be **aspirin**. <br>
+- `editdetail 3 al/aspirin` Edits the allergy of the 3rd patient to be **aspirin**. <br>
 
-- `editdetail 2 p/92345678 al/aspirin` Edits the name and allergy of the 2nd person to be **92345678** and **aspirin** respectively. <br>
+- `editdetail 2 p/92345678 al/aspirin` Edits the name and allergy of the 2nd patient to be **92345678** and **aspirin** respectively. <br>
 
 ### Editing a record of a patient : `editrecord`
 

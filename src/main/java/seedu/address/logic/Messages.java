@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import seedu.address.logic.parser.Prefix;
 import seedu.address.model.appointment.Appointment;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 import seedu.address.model.record.Record;
 
 /**
@@ -16,11 +16,11 @@ public class Messages {
 
     public static final String MESSAGE_UNKNOWN_COMMAND = "Unknown command";
     public static final String MESSAGE_INVALID_COMMAND_FORMAT = "Invalid command format! \n%1$s";
-    public static final String MESSAGE_INVALID_PERSON_DISPLAYED_INDEX = "The person index provided is invalid";
+    public static final String MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX = "The patient index provided is invalid";
     public static final String MESSAGE_INVALID_APPOINTMENT_DISPLAYED_INDEX =
             "The appointment index provided is invalid";
     public static final String MESSAGE_INVALID_RECORD_DISPLAYED_INDEX = "The record index provided is invalid";
-    public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d persons listed!";
+    public static final String MESSAGE_PATIENTS_LISTED_OVERVIEW = "%1$d patients listed!";
     public static final String MESSAGE_RECORDS_LISTED_OVERVIEW = "%1$d records listed!";
     public static final String MESSAGE_DUPLICATE_FIELDS =
             "Multiple values specified for the following single-valued field(s): ";
@@ -37,35 +37,35 @@ public class Messages {
     }
 
     /**
-     * Formats the {@code person} for display to the user.
+     * Formats the {@code patient} for display to the user.
      */
-    public static String format(Person person) {
+    public static String format(Patient patient) {
         final StringBuilder builder = new StringBuilder();
-        builder.append(person.getName())
+        builder.append(patient.getName())
                 .append("; NRIC: ")
-                .append(person.getNric())
+                .append(patient.getNric())
                 .append("; Email: ")
-                .append(person.getEmail())
+                .append(patient.getEmail())
                 .append("; Phone: ")
-                .append(person.getPhone())
+                .append(patient.getPhone())
                 .append("; Gender: ")
-                .append(person.getGender())
+                .append(patient.getGender())
                 .append("; Age: ")
-                .append(person.getAge())
+                .append(patient.getAge())
                 .append("; BloodType: ")
-                .append(person.getBloodType())
+                .append(patient.getBloodType())
                 .append("; Allergies: ");
-        person.getAllergies().forEach(builder::append);
+        patient.getAllergies().forEach(builder::append);
         return builder.toString();
     }
 
     /**
      * Formats the {@code appointment} for display to the user.
      */
-    public static String format(Appointment appointment, Person person) {
+    public static String format(Appointment appointment, Patient patient) {
         final StringBuilder builder = new StringBuilder();
         builder.append("Patient: ")
-                .append(person.getName())
+                .append(patient.getName())
                 .append("; Appointment: ")
                 .append(appointment.getName())
                 .append("; Date & Time: ")
@@ -77,10 +77,10 @@ public class Messages {
     /**
      * Formats the {@code record} for display to the user.
      */
-    public static String format(Record record, Person person) {
+    public static String format(Record record, Patient patient) {
         final StringBuilder builder = new StringBuilder();
         builder.append("Patient: ")
-                .append(person.getName())
+                .append(patient.getName())
                 .append("; Conditions: ")
                 .append(record.getConditions())
                 .append("; Date & Time: ")

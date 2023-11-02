@@ -16,7 +16,7 @@ import seedu.address.model.record.exceptions.RecordNotFoundException;
  * allow nulls.
  * A record is considered unique by comparing using
  * {@code Record#equals(Object)}. As such, adding, updating, removal of
- * records uses Record#equals(Object) for equality so as to ensure that the
+ * records uses Record#equals(Object) for equality to ensure that the
  * record being added, updated, removed is
  * unique in terms of identity in the UniqueRecordList.
  *
@@ -101,8 +101,8 @@ public class UniqueRecordList implements Iterable<Record> {
     }
 
     /**
-     * Replaces the contents of this list with {@code persons}.
-     * {@code persons} must not contain duplicate persons.
+     * Replaces the contents of this list with {@code patients}.
+     * {@code patients} must not contain duplicate patients.
      */
     public void setRecords(List<Record> records) {
         requireAllNonNull(records);

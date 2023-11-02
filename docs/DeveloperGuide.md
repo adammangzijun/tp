@@ -104,7 +104,7 @@ How the `Logic` component works:
 
 1. When `Logic` is called upon to execute a command, it is passed to an `AddressBookParser` object which in turn creates a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
 1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
-1. The command can communicate with the `Model` when it is executed (e.g. to delete a person).
+1. The command can communicate with the `Model` when it is executed (e.g. to delete a patient).
 1. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
 
 Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
@@ -206,9 +206,9 @@ are implemented:
 
 - `EditCommandParser` - Read the command information and create a EditCommand with the specified `PATIENTINDEX`, `FIELD` and `NEWVALUE`.
 - `EditPersonDescriptor` - This class in EditCommand Stores the details to edit the patient with. The specified non-empty field value will replace the
-  corresponding field value of the person.
+  corresponding field value of the patient.
 - `ModelManager#setPerson(Person,Person)`, `AddressBook#SetPerson(Person,Person)`, `UniquePersonList#setPerson(Person,Person)`
-  - Sets the target person in the AddressBook with the edited person.
+  - Sets the target patient in the AddressBook with the edited patient.
 
 This newly implemented `EditCommandParser` class will then be used in the `AddressBookParser#parseCommand(String)`
 and return the `EditCommand` with the `PATIENTINDEX` and the `EditPersonDescriptor` as parameters.
@@ -219,9 +219,9 @@ Given below is an example usage scenario and how the editpatient mechanism behav
 Step 1. The user launches the application for the first time. The `AddressBook` will be initialized
 with the sample data.
 
-Step 2. The user execute `editpatient 1/name/Josh` command to edit name of the 1st person in the Medbook to **Josh**.
+Step 2. The user execute `editpatient 1/name/Josh` command to edit name of the 1st patient in the Medbook to **Josh**.
 The `editpatient` command calls `Model#setPerson(Person, Person)` to edit the Person in the model, which then calls `AddressBook#SetPerson(Person,Person)`,
-which in turn calls `UniquePersonList#setPerson(Person)` to set the target person in the uniquePersonList with the edited person.
+which in turn calls `UniquePersonList#setPerson(Person)` to set the target patient in the uniquePersonList with the edited patient.
 
 <box type="info" seamless>
 
@@ -232,8 +232,8 @@ edit the `Person` in the UniquePersonList.
 
 Step 3. The `Model` then calls `AddressBook#setPerson(Person,Person)` to update the Person in the `AddressBook`.
 
-Step 4. The `AddressBook` then calls `UniquePersonList#(Person,Person)` to set the target person
-in the uniquePersonList with the edited person in the UniquePersonList.
+Step 4. The `AddressBook` then calls `UniquePersonList#(Person,Person)` to set the target patient
+in the uniquePersonList with the edited patient in the UniquePersonList.
 
 Step 5. The newly updated AddressBook will then be shown.
 
@@ -245,12 +245,12 @@ The following sequence diagram shows how the editpatient operation works:
 
 **Aspect: How editpatient executes:**
 
-- **Alternative 1 (current choice):** Create a defensive copy of the Person and then editing it, then replace the original person with the edited person.
+- **Alternative 1 (current choice):** Create a defensive copy of the Person and then editing it, then replace the original patient with the edited patient.
 
   - Pros: Allows for more complex operations and functionalities in the future, like tracking edit histories. This immutability maintains integrity of the data.
   - Cons: Introduces added complexity and potential performance overhead.
 
-- **Alternative 2:** Edit the person directly in the AddressBook.
+- **Alternative 2:** Edit the patient directly in the AddressBook.
   - Pros: Direct and straightforward implementation.
   - Cons: May not be flexible if there are future requirements to retain edit history or additional patient properties.
 
@@ -317,11 +317,11 @@ Step 1. The user launches the application for the first time. The `VersionedAddr
 
 <puml src="diagrams/UndoRedoState0.puml" alt="UndoRedoState0" />
 
-Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+Step 2. The user executes `delete 5` command to delete the 5th patient in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
 
 <puml src="diagrams/UndoRedoState1.puml" alt="UndoRedoState1" />
 
-Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
+Step 3. The user executes `add n/David …​` to add a new patient. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
 
 <puml src="diagrams/UndoRedoState2.puml" alt="UndoRedoState2" />
 
@@ -331,7 +331,7 @@ Step 3. The user executes `add n/David …​` to add a new person. The `add` co
 
 </box>
 
-Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
+Step 4. The user now decides that adding the patient was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
 
 <puml src="diagrams/UndoRedoState3.puml" alt="UndoRedoState3" />
 
@@ -383,7 +383,7 @@ The following activity diagram summarizes what happens when a user executes a ne
 
 - **Alternative 2:** Individual command knows how to undo/redo by
   itself.
-  - Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
+  - Pros: Will use less memory (e.g. for `delete`, just save the patient being deleted).
   - Cons: We must ensure that the implementation of each individual command are correct.
 
 _{more aspects and alternatives to be added}_
@@ -413,7 +413,7 @@ Step 1. The user launches the application for the first time. The `AddressBook` 
 with the sample data. The `MainWindow` calls `Logic#getRecordList()`, and `Logic#getPersonBeingViewed()` so that
 `recordListPanel` and `personBeingViewedPanel` can safely occupy their destined places.
 
-Step 2. The user execute `view 1` command to view the medical records of the 1st person in the Medbook.
+Step 2. The user execute `view 1` command to view the medical records of the 1st patient in the Medbook.
 The `view` command calls `Model#updateRecords(Person)`.
 
 <box type="info" seamless>
@@ -425,7 +425,7 @@ update the `record` and `personBeingViewed` variable.
 
 Step 3. The `Model` then calls `AddressBook#setRecords(Person)` to update the variable in the `AddressBook`. The medical
 records of the patient is displayed at the left column in the `recordListPanel`. The `personBeingViewedPanel` contains
-the person card of the patient.
+the patient card of the patient.
 
 The following sequence diagram shows how the undo operation works:
 
@@ -441,8 +441,8 @@ The following sequence diagram shows how the undo operation works:
   _ Cons: May have performance issues in terms of memory usage.
 
 - **Alternative 2:** Saves the `records` as `UniqueRecordList` and `personBeingViewed`as `Person`.
-  _ Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
-  _ Cons: A lot of extra work need to be done (e.g. need to have an empty person object and need to make it as a node
+  _ Pros: Will use less memory (e.g. for `delete`, just save the patient being deleted).
+  _ Cons: A lot of extra work need to be done (e.g. need to have an empty patient object and need to make it as a node
   before passing into the `personBeingViewedPanel`).
 
 Certainly! Here is a portion that you can add to your developer guide to explain the encryption/decryption feature:
@@ -721,7 +721,7 @@ _{More to be added}_
 ### Non-Functional Requirements
 
 1.  Should work on any _mainstream OS_ as long as it has Java `11` or above installed.
-2.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
+2.  Should be able to hold up to 1000 patients without a noticeable sluggishness in performance for typical usage.
 3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
 4.  The system should be backward compatible with data produced by earlier versions of the system.
 5.  The system should be usable by a novice who has never used an address book.
@@ -763,17 +763,17 @@ testers are expected to do more _exploratory_ testing.
 
 1. _{ more test cases …​ }_
 
-### Deleting a person
+### Deleting a patient
 
-1. Deleting a person while all persons are being shown
+1. Deleting a patient while all patients are being shown
 
-   1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+   1. Prerequisites: List all patients using the `list` command. Multiple patients in the list.
 
    1. Test case: `delete 1`<br>
       Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
 
    1. Test case: `delete 0`<br>
-      Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
+      Expected: No patient is deleted. Error details shown in the status message. Status bar remains the same.
 
    1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
       Expected: Similar to previous.

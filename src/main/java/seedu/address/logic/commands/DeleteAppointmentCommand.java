@@ -11,7 +11,7 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.appointment.Appointment;
 import seedu.address.model.appointment.UniqueAppointmentList;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 import seedu.address.model.shared.Nric;
 
 /**
@@ -41,7 +41,7 @@ public class DeleteAppointmentCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         List<Appointment> appointmentList = model.getFilteredAppointmentList();
-        List<Person> personList = model.getFilteredPersonList();
+        List<Patient> patientList = model.getFilteredPatientList();
 
         if (targetIndex.getZeroBased() >= appointmentList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_APPOINTMENT_DISPLAYED_INDEX);
@@ -49,28 +49,28 @@ public class DeleteAppointmentCommand extends Command {
 
         Appointment appointmentToDelete = appointmentList.get(targetIndex.getZeroBased());
         Nric patientNric = appointmentToDelete.getNric();
-        Person personWithAppointment = personList.stream()
-                .filter(person -> person.getNric().equals(patientNric))
+        Patient patientWithAppointment = patientList.stream()
+                .filter(patient -> patient.getNric().equals(patientNric))
                 .findFirst()
                 .orElse(null);
-        if (personWithAppointment == null) {
+        if (patientWithAppointment == null) {
             throw new CommandException(MESSAGE_INVALID_NRIC);
         }
         UniqueAppointmentList newList = new UniqueAppointmentList();
-        newList.setAppointments(personWithAppointment.getAppointments());
+        newList.setAppointments(patientWithAppointment.getAppointments());
         newList.remove(appointmentToDelete);
 
-        Person newPatient = new Person(personWithAppointment.getName(), personWithAppointment.getNric(),
-                personWithAppointment.getEmail(),
-                personWithAppointment.getPhone(), personWithAppointment.getGender(), personWithAppointment.getAge(),
-                personWithAppointment.getBloodType(),
-                personWithAppointment.getAllergies(), personWithAppointment.getRecords(), newList,
-                personWithAppointment.isPinned());
+        Patient newPatient = new Patient(patientWithAppointment.getName(), patientWithAppointment.getNric(),
+                patientWithAppointment.getEmail(),
+                patientWithAppointment.getPhone(), patientWithAppointment.getGender(), patientWithAppointment.getAge(),
+                patientWithAppointment.getBloodType(),
+                patientWithAppointment.getAllergies(), patientWithAppointment.getRecords(), newList,
+                patientWithAppointment.isPinned());
 
-        model.setPerson(personWithAppointment, newPatient);
+        model.setPatient(patientWithAppointment, newPatient);
         model.resetAppointmentList();
         return new CommandResult(String.format(MESSAGE_DELETE_APPOINTMENT_SUCCESS,
-                Messages.format(appointmentToDelete, personWithAppointment)));
+                Messages.format(appointmentToDelete, patientWithAppointment)));
     }
 
     @Override

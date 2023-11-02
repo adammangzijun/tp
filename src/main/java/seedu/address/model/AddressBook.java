@@ -9,19 +9,19 @@ import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.appointment.Appointment;
 import seedu.address.model.appointment.UniqueAppointmentList;
-import seedu.address.model.person.Person;
-import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.patient.Patient;
+import seedu.address.model.patient.UniquePatientList;
 import seedu.address.model.record.Record;
 import seedu.address.model.record.UniqueRecordList;
 
 /**
  * Wraps all data at the address-book level
- * Duplicates are not allowed (by .isSamePerson comparison)
+ * Duplicates are not allowed (by .isSamePatient comparison)
  */
 public class AddressBook implements ReadOnlyAddressBook {
 
-    private final UniquePersonList persons;
-    private final UniquePersonList personBeingViewed;
+    private final UniquePatientList patients;
+    private final UniquePatientList patientBeingViewed;
     private final UniqueRecordList records;
     private final UniqueAppointmentList appointments;
     /*
@@ -35,17 +35,17 @@ public class AddressBook implements ReadOnlyAddressBook {
      * among constructors.
      */
     {
-        persons = new UniquePersonList();
+        patients = new UniquePatientList();
         records = new UniqueRecordList();
         appointments = new UniqueAppointmentList();
-        personBeingViewed = new UniquePersonList();
+        patientBeingViewed = new UniquePatientList();
     }
 
     public AddressBook() {
     }
 
     /**
-     * Creates an AddressBook using the Persons in the {@code toBeCopied}
+     * Creates an AddressBook using the Patients in the {@code toBeCopied}
      */
     public AddressBook(ReadOnlyAddressBook toBeCopied) {
         this();
@@ -55,18 +55,18 @@ public class AddressBook implements ReadOnlyAddressBook {
     //// list overwrite operations
 
     /**
-     * Replaces the contents of the person list with {@code persons}.
-     * {@code persons} must not contain duplicate persons.
+     * Replaces the contents of the patient list with {@code patients}.
+     * {@code patients} must not contain duplicate patients.
      */
-    public void setPersons(List<Person> persons) {
-        this.persons.setPersons(persons);
+    public void setPatients(List<Patient> patients) {
+        this.patients.setPatients(patients);
     }
 
-    public void setRecords(Person person) {
-        ArrayList<Person> beingViewed = new ArrayList<>();
-        beingViewed.add(person);
-        this.personBeingViewed.setPersons(beingViewed);
-        this.records.setRecords(person.getRecords());
+    public void setRecords(Patient patient) {
+        ArrayList<Patient> beingViewed = new ArrayList<>();
+        beingViewed.add(patient);
+        this.patientBeingViewed.setPatients(beingViewed);
+        this.records.setRecords(patient.getRecords());
     }
 
     /**
@@ -75,48 +75,48 @@ public class AddressBook implements ReadOnlyAddressBook {
     public void resetData(ReadOnlyAddressBook newData) {
         requireNonNull(newData);
 
-        List<Person> fullList = newData.getPersonList();
-        setPersons(fullList);
+        List<Patient> fullList = newData.getPatientList();
+        setPatients(fullList);
     }
 
-    //// person-level operations
+    //// patient-level operations
 
     /**
-     * Returns true if a person with the same identity as {@code person} exists in
+     * Returns true if a patient with the same identity as {@code patient} exists in
      * the address book.
      */
-    public boolean hasPerson(Person person) {
-        requireNonNull(person);
-        return persons.contains(person);
+    public boolean hasPatient(Patient patient) {
+        requireNonNull(patient);
+        return patients.contains(patient);
     }
 
     /**
-     * Adds a person to the address book.
-     * The person must not already exist in the address book.
+     * Adds a patient to the address book.
+     * The patient must not already exist in the address book.
      */
-    public void addPerson(Person p) {
-        persons.add(p);
+    public void addPatient(Patient p) {
+        patients.add(p);
     }
 
     /**
-     * Replaces the given person {@code target} in the list with
-     * {@code editedPerson}.
+     * Replaces the given patient {@code target} in the list with
+     * {@code editedPatient}.
      * {@code target} must exist in the address book.
-     * The person identity of {@code editedPerson} must not be the same as another
-     * existing person in the address book.
+     * The patient identity of {@code editedPatient} must not be the same as another
+     * existing patient in the address book.
      */
-    public void setPerson(Person target, Person editedPerson) {
-        requireNonNull(editedPerson);
+    public void setPatient(Patient target, Patient editedPatient) {
+        requireNonNull(editedPatient);
 
-        persons.setPerson(target, editedPerson);
+        patients.setPatient(target, editedPatient);
     }
 
     /**
      * Removes {@code key} from this {@code AddressBook}.
      * {@code key} must exist in the address book.
      */
-    public void removePerson(Person key) {
-        persons.remove(key);
+    public void removePatient(Patient key) {
+        patients.remove(key);
     }
 
     //// util methods
@@ -124,13 +124,13 @@ public class AddressBook implements ReadOnlyAddressBook {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("persons", persons)
+                .add("patients", patients)
                 .toString();
     }
 
     @Override
-    public ObservableList<Person> getPersonList() {
-        return persons.asUnmodifiableObservableList();
+    public ObservableList<Patient> getPatientList() {
+        return patients.asUnmodifiableObservableList();
     }
 
     public ObservableList<Record> getRecordList() {
@@ -143,20 +143,20 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     /**
-     * Resets the appointment list to include all appointments from all persons.
+     * Resets the appointment list to include all appointments from all patients.
      */
     public void resetAppointmentList() {
         UniqueAppointmentList newList = new UniqueAppointmentList();
-        for (Person person : persons) {
-            for (Appointment appointment : person.getAppointments()) {
+        for (Patient patient : patients) {
+            for (Appointment appointment : patient.getAppointments()) {
                 newList.add(appointment);
             }
         }
         appointments.setAppointments(newList);
     }
 
-    public ObservableList<Person> getPersonBeingViewed() {
-        return personBeingViewed.asUnmodifiableObservableList();
+    public ObservableList<Patient> getPatientBeingViewed() {
+        return patientBeingViewed.asUnmodifiableObservableList();
     }
 
     @Override
@@ -171,11 +171,11 @@ public class AddressBook implements ReadOnlyAddressBook {
         }
 
         AddressBook otherAddressBook = (AddressBook) other;
-        return persons.equals(otherAddressBook.persons);
+        return patients.equals(otherAddressBook.patients);
     }
 
     @Override
     public int hashCode() {
-        return persons.hashCode();
+        return patients.hashCode();
     }
 }

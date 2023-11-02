@@ -24,7 +24,7 @@ public class JsonAdaptedRecord {
     private final String dateTime;
     private final List<JsonAdaptedCondition> conditions = new ArrayList<>();
     private final String filePath;
-    private final Integer personIndex;
+    private final Integer patientIndex;
     private final List<JsonAdaptedMedication> medications = new ArrayList<>();
 
 
@@ -36,13 +36,13 @@ public class JsonAdaptedRecord {
             @JsonProperty("condition") List<JsonAdaptedCondition> conditions,
             @JsonProperty("medication") List<JsonAdaptedMedication> medications,
             @JsonProperty("filePath") String filePath,
-            @JsonProperty("personIndex") Integer personIndex) {
+            @JsonProperty("patientIndex") Integer patientIndex) {
         this.dateTime = dateTime;
         if (conditions != null) {
             this.conditions.addAll(conditions);
         }
         this.filePath = filePath;
-        this.personIndex = personIndex;
+        this.patientIndex = patientIndex;
         if (medications != null) {
             this.medications.addAll(medications);
         }
@@ -53,7 +53,7 @@ public class JsonAdaptedRecord {
      */
     public JsonAdaptedRecord(Record source) {
         this.dateTime = source.getDateTime().toString();
-        this.personIndex = source.getPersonIndex();
+        this.patientIndex = source.getPatientIndex();
         this.filePath = source.getFilePath() == null ? null : source.getFilePath().toString();
         this.conditions.addAll(source.getConditions().stream()
                 .map(JsonAdaptedCondition::new)
@@ -64,11 +64,11 @@ public class JsonAdaptedRecord {
     }
 
     /**
-     * Converts this Jackson-friendly adapted person object into the model's
-     * {@code Person} object.
+     * Converts this Jackson-friendly adapted patient object into the model's
+     * {@code Patient} object.
      *
      * @throws IllegalValueException if there were any data constraints violated in
-     *                               the adapted person.
+     *                               the adapted patient.
      */
     public Record toModelType() throws IllegalValueException {
         final List<Condition> conditionsList = new ArrayList<>();
@@ -99,10 +99,10 @@ public class JsonAdaptedRecord {
         final List<Medication> modelMedications = new ArrayList<>(medicationsList);
         final List<Condition> modelConditions = new ArrayList<>(conditionsList);
         if (filePath == null) {
-            return new Record(modelDateTime, modelConditions, modelMedications, null, personIndex);
+            return new Record(modelDateTime, modelConditions, modelMedications, null, patientIndex);
         } else {
             Path modelFilePath = Paths.get(filePath);
-            return new Record(modelDateTime, modelConditions, modelMedications, modelFilePath, personIndex);
+            return new Record(modelDateTime, modelConditions, modelMedications, modelFilePath, patientIndex);
         }
     }
 }

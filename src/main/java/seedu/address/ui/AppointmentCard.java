@@ -7,7 +7,7 @@ import javafx.scene.layout.Region;
 import seedu.address.model.appointment.Appointment;
 
 /**
- * An UI component that displays information of a {@code Appointment}.
+ * A UI component that displays information of a {@code Appointment}.
  */
 public class AppointmentCard extends UiPart<Region> {
 

@@ -66,9 +66,9 @@ public class EditRecordCommandParser implements Parser<EditRecordCommand> {
     }
 
     /**
-     * Parses {@code Collection<String> condtions} into a {@code Set<Condition>} if {@code condition} is non-empty.
-     * If {@code contion} contain only one element which is an empty string, it will be parsed into a
-     * {@code Set<Condition>} containing zero allergies.
+     * Parses {@code Collection<String> condtions} into a {@code Set<Condition>} if {@code conditions} is non-empty.
+     * If {@code conditions} contain only one element which is an empty string, it will be parsed into a
+     * {@code Set<Condition>} containing zero condition.
      */
     private Optional<List<Condition>> parseConditionsForEdit(Collection<String> conditions) throws ParseException {
         assert conditions != null;
@@ -83,7 +83,7 @@ public class EditRecordCommandParser implements Parser<EditRecordCommand> {
     /**
      * Parses {@code Collection<String> medications} into a {@code Set<Medication>} if {@code medications} is non-empty.
      * If {@code medications} contain only one element which is an empty string, it will be parsed into a
-     * {@code Set<Medication>} containing zero allergies.
+     * {@code Set<Medication>} containing zero medication.
      */
     private Optional<List<Medication>> parseMedicationForEdit(Collection<String> medications) throws ParseException {
         assert medications != null;

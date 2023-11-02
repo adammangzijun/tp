@@ -22,7 +22,7 @@ public class RecordBuilder {
 
     private Path filePath;
 
-    private Integer personIndex;
+    private Integer patientIndex;
 
     /**
      * Creates a {@code RecordBuilder} with the default details.
@@ -40,7 +40,7 @@ public class RecordBuilder {
         conditions = recordToCopy.getConditions();
         dateTime = recordToCopy.getDateTime();
         filePath = recordToCopy.getFilePath();
-        personIndex = recordToCopy.getPersonIndex();
+        patientIndex = recordToCopy.getPatientIndex();
         medications = recordToCopy.getMedications();
     }
 
@@ -78,10 +78,10 @@ public class RecordBuilder {
     }
 
     /**
-     * Sets the {@code personIndex} of the {@code Record} that we are building.
+     * Sets the {@code patientIndex} of the {@code Record} that we are building.
      */
-    public RecordBuilder withPersonIndex(Integer personIndex) {
-        this.personIndex = personIndex;
+    public RecordBuilder withPatientIndex(Integer patientIndex) {
+        this.patientIndex = patientIndex;
         return this;
     }
 
@@ -89,7 +89,7 @@ public class RecordBuilder {
      * Builds a new record
      */
     public Record build() {
-        return new Record(dateTime, conditions, medications, filePath, personIndex);
+        return new Record(dateTime, conditions, medications, filePath, patientIndex);
     }
 
 }

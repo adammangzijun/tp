@@ -26,28 +26,28 @@ public class Record {
     private final List<Medication> medications = new ArrayList<>();
     private final DateTime dateTime;
     private Path filePath;
-    private final Integer personIndex;
+    private final Integer patientIndex;
 
     /**
      * Constructs a record object
      */
 
     public Record(DateTime dateTime, List<Condition> conditions, List<Medication> medications, Path filePath,
-            Integer personIndex) {
+            Integer patientIndex) {
         requireAllNonNull(dateTime, conditions);
         this.dateTime = dateTime;
         this.conditions.addAll(conditions);
         this.medications.addAll(medications);
         this.filePath = filePath;
-        this.personIndex = personIndex;
+        this.patientIndex = patientIndex;
     }
 
     public DateTime getDateTime() {
         return dateTime;
     }
 
-    public int getPersonIndex() {
-        return personIndex;
+    public int getPatientIndex() {
+        return patientIndex;
     }
 
     public List<Condition> getConditions() {
@@ -76,7 +76,7 @@ public class Record {
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(dateTime, conditions, filePath, personIndex);
+        return Objects.hash(dateTime, conditions, filePath, patientIndex);
     }
 
     public List<Medication> getMedications() {
@@ -98,7 +98,7 @@ public class Record {
         return dateTime.equals(otherRecord.dateTime)
                 && conditions.equals(otherRecord.conditions)
                 && Objects.equals(filePath, otherRecord.filePath)
-                && personIndex.equals(otherRecord.personIndex)
+                && patientIndex.equals(otherRecord.patientIndex)
                 && medications.equals(otherRecord.medications);
     }
 
@@ -109,7 +109,7 @@ public class Record {
                 .add("conditions", conditions)
                 .add("medications", medications)
                 .add("filePath", filePath)
-                .add("personIndex", personIndex)
+                .add("patientIndex", patientIndex)
                 .toString();
     }
 

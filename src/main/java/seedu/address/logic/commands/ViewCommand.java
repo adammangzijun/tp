@@ -8,7 +8,7 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 
 /**
  * Views patient detailed information at the specified index
@@ -25,7 +25,7 @@ public class ViewCommand extends Command {
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1";
 
-    public static final String MESSAGE_VIEW_PERSON_SUCCESS = "View Person: %1$s";
+    public static final String MESSAGE_VIEW_PATIENT_SUCCESS = "View Patient: %1$s";
 
     private final Index targetIndex;
 
@@ -41,15 +41,15 @@ public class ViewCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        List<Person> lastShownList = model.getFilteredPersonList();
+        List<Patient> lastShownList = model.getFilteredPatientList();
 
         if (targetIndex.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            throw new CommandException(Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
         }
 
-        Person personToView = lastShownList.get(targetIndex.getZeroBased());
-        model.updateRecordList(personToView);
-        return new CommandResult(String.format(MESSAGE_VIEW_PERSON_SUCCESS, Messages.format(personToView)));
+        Patient patientToView = lastShownList.get(targetIndex.getZeroBased());
+        model.updateRecordList(patientToView);
+        return new CommandResult(String.format(MESSAGE_VIEW_PATIENT_SUCCESS, Messages.format(patientToView)));
     }
 
     @Override

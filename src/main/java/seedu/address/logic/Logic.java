@@ -9,7 +9,7 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.appointment.Appointment;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 import seedu.address.model.record.Record;
 
 /**
@@ -33,11 +33,11 @@ public interface Logic {
      */
     ReadOnlyAddressBook getAddressBook();
 
-    /** Returns an unmodifiable view of the filtered list of persons */
-    ObservableList<Person> getFilteredPersonList();
+    /** Returns an unmodifiable view of the filtered list of patients */
+    ObservableList<Patient> getFilteredPatientList();
 
-    /** Returns an unmodifiable view of the pinned list of persons */
-    ObservableList<Person> getPinnedPersonList();
+    /** Returns an unmodifiable view of the pinned list of patients */
+    ObservableList<Patient> getPinnedPatientList();
 
     /** Returns an unmodifiable view of the filtered list of appointments */
     ObservableList<Appointment> getFilteredAppointmentList();
@@ -62,5 +62,5 @@ public interface Logic {
 
     ObservableList<Record> getRecordList();
 
-    ObservableList<Person> getPersonBeingViewed();
+    ObservableList<Patient> getPatientBeingViewed();
 }

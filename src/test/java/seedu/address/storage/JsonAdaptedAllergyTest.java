@@ -6,7 +6,7 @@ import static seedu.address.testutil.Assert.assertThrows;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.model.person.Allergy;
+import seedu.address.model.patient.Allergy;
 
 public class JsonAdaptedAllergyTest {
     private static final String INVALID_ALLERGY = "Dust+";

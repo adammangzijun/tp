@@ -12,7 +12,7 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 import seedu.address.model.record.Record;
 import seedu.address.model.record.UniqueRecordList;
 
@@ -51,25 +51,25 @@ public class AddRecordCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
 
-        List<Person> lastShownList = model.getFilteredPersonList();
+        List<Patient> lastShownList = model.getFilteredPatientList();
 
         if (index.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            throw new CommandException(Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
         }
 
-        Person personToAddRecord = lastShownList.get(index.getZeroBased());
+        Patient patientToAddRecord = lastShownList.get(index.getZeroBased());
         UniqueRecordList newRecords = new UniqueRecordList();
-        newRecords.setRecords(personToAddRecord.getRecords());
+        newRecords.setRecords(patientToAddRecord.getRecords());
         newRecords.add(record);
-        Person personWithAddedRecord = new Person(personToAddRecord.getName(), personToAddRecord.getNric(),
-                personToAddRecord.getEmail(), personToAddRecord.getPhone(), personToAddRecord.getGender(),
-                personToAddRecord.getAge(), personToAddRecord.getBloodType(), personToAddRecord.getAllergies(),
-                newRecords, personToAddRecord.getAppointments(), personToAddRecord.isPinned());
+        Patient patientWithAddedRecord = new Patient(patientToAddRecord.getName(), patientToAddRecord.getNric(),
+                patientToAddRecord.getEmail(), patientToAddRecord.getPhone(), patientToAddRecord.getGender(),
+                patientToAddRecord.getAge(), patientToAddRecord.getBloodType(), patientToAddRecord.getAllergies(),
+                newRecords, patientToAddRecord.getAppointments(), patientToAddRecord.isPinned());
 
-        model.setPerson(personToAddRecord, personWithAddedRecord);
-        model.updateRecordList(personWithAddedRecord);
+        model.setPatient(patientToAddRecord, patientWithAddedRecord);
+        model.updateRecordList(patientWithAddedRecord);
 
-        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(record, personWithAddedRecord)));
+        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(record, patientWithAddedRecord)));
     }
 
     @Override

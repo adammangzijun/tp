@@ -44,47 +44,42 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NRIC;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
-import static seedu.address.testutil.TypicalPersons.AMY;
-import static seedu.address.testutil.TypicalPersons.BOB;
+import static seedu.address.testutil.TypicalPatients.AMY;
+import static seedu.address.testutil.TypicalPatients.BOB;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.AddCommand;
-import seedu.address.model.person.Age;
-import seedu.address.model.person.Allergy;
-import seedu.address.model.person.BloodType;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Gender;
-import seedu.address.model.person.Person;
-import seedu.address.model.person.Phone;
+import seedu.address.model.patient.*;
+import seedu.address.model.patient.Patient;
 import seedu.address.model.shared.Name;
 import seedu.address.model.shared.Nric;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.PatientBuilder;
 
 public class AddCommandParserTest {
     private AddCommandParser parser = new AddCommandParser();
 
     @Test
     public void parse_allFieldsPresent_success() {
-        Person expectedPerson = new PersonBuilder(BOB).withAllergies(VALID_ALLERGY_DUST).build();
+        Patient expectedPatient = new PatientBuilder(BOB).withAllergies(VALID_ALLERGY_DUST).build();
 
         // whitespace only preamble
         assertParseSuccess(parser, PREAMBLE_WHITESPACE + NAME_DESC_BOB + NRIC_DESC_BOB
                 + EMAIL_DESC_BOB + PHONE_DESC_BOB
                 + GENDER_DESC_BOB + AGE_DESC_BOB + BLOODTYPE_DESC_BOB
                 + ALLERGY_DESC_DUST,
-                new AddCommand(expectedPerson));
+                new AddCommand(expectedPatient));
 
         // multiple tags - all accepted
-        Person expectedPersonMultipleTags = new PersonBuilder(BOB).withAllergies(VALID_ALLERGY_DUST,
+        Patient expectedPatientMultipleTags = new PatientBuilder(BOB).withAllergies(VALID_ALLERGY_DUST,
                 VALID_ALLERGY_PEANUTS)
                 .build();
         assertParseSuccess(parser,
                 NAME_DESC_BOB + NRIC_DESC_BOB + EMAIL_DESC_BOB + PHONE_DESC_BOB + GENDER_DESC_BOB
                         + AGE_DESC_BOB + BLOODTYPE_DESC_BOB + ALLERGY_DESC_DUST
                         + ALLERGY_DESC_PEANUTS,
-                new AddCommand(expectedPersonMultipleTags));
+                new AddCommand(expectedPatientMultipleTags));
     }
 
     @Test
@@ -181,10 +176,10 @@ public class AddCommandParserTest {
     @Test
     public void parse_optionalFieldsMissing_success() {
         // zero tags
-        Person expectedPerson = new PersonBuilder(AMY).withAllergies().build();
+        Patient expectedPatient = new PatientBuilder(AMY).withAllergies().build();
         assertParseSuccess(parser, NAME_DESC_AMY + NRIC_DESC_AMY + EMAIL_DESC_AMY + PHONE_DESC_AMY
                 + GENDER_DESC_AMY + AGE_DESC_AMY + BLOODTYPE_DESC_AMY,
-                new AddCommand(expectedPerson));
+                new AddCommand(expectedPatient));
     }
 
     @Test

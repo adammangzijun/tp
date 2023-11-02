@@ -47,7 +47,7 @@ public class RecordTest {
                 + ", conditions=" + record.getConditions()
                 + ", medications=" + record.getMedications()
                 + ", filePath=" + record.getFilePath()
-                + ", personIndex=" + record.getPersonIndex()
+                + ", personIndex=" + record.getPatientIndex()
                 + "}";
 
         assertEquals(expected, record.toString());

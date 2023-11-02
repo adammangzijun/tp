@@ -9,21 +9,21 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 
 /**
- * Unpins the person identified using it's displayed index from the address book.
+ * Unpins the patient identified using it's displayed index from the address book.
  */
 public class UnpinCommand extends Command {
 
     public static final String COMMAND_WORD = "unpin";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Unpins the person identified by the index number used in the displayed pinned list.\n"
+            + ": Unpins the patient identified by the index number used in the displayed pinned list.\n"
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1";
 
-    public static final String MESSAGE_UNPIN_PERSON_SUCCESS = "Unpinned Person: %1$s";
+    public static final String MESSAGE_UNPIN_PATIENT_SUCCESS = "Unpinned Patient: %1$s";
 
     private final Index targetIndex;
 
@@ -34,20 +34,20 @@ public class UnpinCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        List<Person> lastShownPinnedList = model.getPinnedPersonList();
+        List<Patient> lastShownPinnedList = model.getPinnedPatientList();
 
         if (targetIndex.getZeroBased() >= lastShownPinnedList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            throw new CommandException(Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
         }
 
-        Person personToUnpin = lastShownPinnedList.get(targetIndex.getZeroBased());
-        Person unpinnedPerson = new Person(personToUnpin.getName(), personToUnpin.getNric(), personToUnpin.getEmail(),
-                personToUnpin.getPhone(), personToUnpin.getGender(), personToUnpin.getAge(),
-                personToUnpin.getBloodType(), personToUnpin.getAllergies(), personToUnpin.getRecords(),
-                personToUnpin.getAppointments(), false);
+        Patient patientToUnpin = lastShownPinnedList.get(targetIndex.getZeroBased());
+        Patient unpinnedPatient = new Patient(patientToUnpin.getName(), patientToUnpin.getNric(), patientToUnpin.getEmail(),
+                patientToUnpin.getPhone(), patientToUnpin.getGender(), patientToUnpin.getAge(),
+                patientToUnpin.getBloodType(), patientToUnpin.getAllergies(), patientToUnpin.getRecords(),
+                patientToUnpin.getAppointments(), false);
 
-        model.setPerson(personToUnpin, unpinnedPerson);
-        return new CommandResult(String.format(MESSAGE_UNPIN_PERSON_SUCCESS, Messages.format(personToUnpin)));
+        model.setPatient(patientToUnpin, unpinnedPatient);
+        return new CommandResult(String.format(MESSAGE_UNPIN_PATIENT_SUCCESS, Messages.format(patientToUnpin)));
     }
 
     @Override

@@ -31,23 +31,23 @@ public class MainWindow extends UiPart<Stage> {
     private Logic logic;
 
     // Independent Ui parts residing in this Ui container
-    private PersonListPanel personListPanel;
+    private PatientListPanel patientListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
     private AppointmentsWindow appointmentsWindow;
-    private PinnedPersonListPanel pinnedPersonListPanel;
+    private PinnedPatientListPanel pinnedPatientListPanel;
     private RecordListPanel recordListPanel;
-    private PersonListPanel personBeingViewedPanel;
+    private PatientListPanel patientBeingViewedPanel;
     @FXML
     private StackPane commandBoxPlaceholder;
     @FXML
     private MenuItem helpMenuItem;
     @FXML
-    private StackPane personListPanelPlaceholder;
+    private StackPane patientListPanelPlaceholder;
     @FXML
-    private StackPane pinnedPersonListPanelPlaceholder;
+    private StackPane pinnedPatientListPanelPlaceholder;
     @FXML
-    private StackPane personBeingViewedPanelPlaceholder;
+    private StackPane patientBeingViewedPanelPlaceholder;
     @FXML
     private StackPane recordListPanelPlaceholder;
     @FXML
@@ -117,17 +117,17 @@ public class MainWindow extends UiPart<Stage> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
-        personListPanel = new PersonListPanel(logic.getFilteredPersonList());
-        personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
+        patientListPanel = new PatientListPanel(logic.getFilteredPatientList());
+        patientListPanelPlaceholder.getChildren().add(patientListPanel.getRoot());
 
-        pinnedPersonListPanel = new PinnedPersonListPanel(logic.getPinnedPersonList());
-        pinnedPersonListPanelPlaceholder.getChildren().add(pinnedPersonListPanel.getRoot());
+        pinnedPatientListPanel = new PinnedPatientListPanel(logic.getPinnedPatientList());
+        pinnedPatientListPanelPlaceholder.getChildren().add(pinnedPatientListPanel.getRoot());
 
         recordListPanel = new RecordListPanel(logic.getFilteredRecordList());
         recordListPanelPlaceholder.getChildren().add(recordListPanel.getRoot());
 
-        personBeingViewedPanel = new PersonListPanel(logic.getPersonBeingViewed());
-        personBeingViewedPanelPlaceholder.getChildren().add(personBeingViewedPanel.getRoot());
+        patientBeingViewedPanel = new PatientListPanel(logic.getPatientBeingViewed());
+        patientBeingViewedPanelPlaceholder.getChildren().add(patientBeingViewedPanel.getRoot());
 
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
@@ -192,8 +192,8 @@ public class MainWindow extends UiPart<Stage> {
         primaryStage.hide();
     }
 
-    public PersonListPanel getPersonListPanel() {
-        return personListPanel;
+    public PatientListPanel getPatientListPanel() {
+        return patientListPanel;
     }
 
     /**
