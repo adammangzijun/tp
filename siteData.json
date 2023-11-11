@@ -81,7 +81,9 @@
         "editing-a-patient-s-details": "Editing a Patient's Details",
         "searching-for-patients": "Searching for Patients",
         "verifying-patient-data-integrity": "Verifying Patient Data Integrity",
-        "handling-invalid-commands": "Handling Invalid Commands"
+        "handling-invalid-commands": "Handling Invalid Commands",
+        "appendix-planned-enhancements": "Appendix: Planned Enhancements",
+        "additional-navigation-in-appointment-calender": "Additional Navigation in Appointment Calender"
       },
       "headingKeywords": {}
     },
@@ -134,7 +136,7 @@
         "navigating-the-graphical-user-interface-gui": "Navigating the Graphical User Interface (GUI)",
         "medbook-tutorial": "Medbook Tutorial",
         "features": "Features",
-        "parameters": "PARAMETERS",
+        "parameters": "Parameters",
         "viewing-help-help": "Viewing help : help",
         "adding-a-patient-addpatient": "Adding a patient: addpatient",
         "adding-medical-records-addrecord": "Adding Medical Records : addrecord",
@@ -142,7 +144,7 @@
         "listing-all-patients-list": "Listing all patients : list",
         "view-patient-records-view": "View patient records : view",
         "view-appointments-viewappointment": "View appointments : viewappointment",
-        "editing-detail-of-a-patient-editpatient": "Editing detail of a patient : editpatient",
+        "editing-details-of-a-patient-editpatient": "Editing details of a patient : editpatient",
         "editing-a-record-of-a-patient-editrecord": "Editing a record of a patient : editrecord",
         "locating-patients-by-keywords-search": "Locating patients by keywords: search",
         "locating-records-by-keywords-searchrecord": "Locating records by keywords: searchrecord",
@@ -205,7 +207,7 @@
       "src": "team/ryanongwx.md",
       "title": "Ryan's Project Portfolio Page",
       "headings": {
-        "project-medbook": "Project: MedBook"
+        "project-medbook": "Project Medbook"
       },
       "headingKeywords": {}
     },
