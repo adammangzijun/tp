@@ -13,12 +13,22 @@ Class ModelManager
 Class UserPrefs
 
 Class UniquePersonList
+Class UniqueRecordList
+Class UniqueAppointmentList
 Class Person
-Class Address
 Class Email
 Class Name
 Class Phone
-Class Tag
+Class Age
+Class Allergy
+Class Gender
+Class Phone
+Class Nric
+Class Record
+Class DateTime
+Class Condition
+Class Medication
+Class Appointment
 
 Class I #FFFFFF
 }
@@ -26,29 +36,43 @@ Class I #FFFFFF
 Class HiddenOutside #FFFFFF
 HiddenOutside ..> Model
 
-AddressBook .up.|> ReadOnlyAddressBook
+ReadOnlyUserPrefs -[hidden]right- Model
 
+AddressBook .up.|> ReadOnlyAddressBook
 ModelManager .up.|> Model
+UserPrefs .up.|> ReadOnlyUserPrefs
 Model .right.> ReadOnlyUserPrefs
 Model .left.> ReadOnlyAddressBook
-ModelManager -left-> "1" AddressBook
-ModelManager -right-> "1" UserPrefs
-UserPrefs .up.|> ReadOnlyUserPrefs
+ModelManager -down-> "1" AddressBook
+ModelManager -down-> "1" UserPrefs
 
-AddressBook *--> "1" UniquePersonList
+AddressBook *--> "2" UniquePersonList
+AddressBook *--> "1" UniqueRecordList
+AddressBook *--> "1" UniqueAppointmentList
 UniquePersonList --> "~* all" Person
+UniqueRecordList --> "~* all" Record
+UniqueAppointmentList --> "~* all" Appointment
 Person *--> Name
 Person *--> Phone
 Person *--> Email
-Person *--> Address
-Person *--> "*" Tag
+Person *--> Age
+Person *--> Gender
+Person *--> "*" Allergy
+Person *-right-> "*" Record
+Person *--> Nric
+Record *--> DateTime
+Record *--> "*" Condition
+Record *--> "*" Medication
+Appointment *--> DateTime
+Appointment *--> Name
+Appointment *--> Nric
 
-Person -[hidden]up--> I
-UniquePersonList -[hidden]right-> I
-
-Name -[hidden]right-> Phone
-Phone -[hidden]right-> Address
-Address -[hidden]right-> Email
+ModelManager -[hidden]down- UniquePersonList
+ModelManager -[hidden]down- UniqueRecordList
+ModelManager -[hidden]down- UniqueAppointmentList
 
 ModelManager --> "~* filtered" Person
+ModelManager --> "~* filtered" Record
+ModelManager --> "~* filtered" Appointment
+
 @enduml

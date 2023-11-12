@@ -14,10 +14,10 @@ box Model MODEL_COLOR_T1
 participant ":Model" as Model MODEL_COLOR
 end box
 
-[-> LogicManager : execute("addappointment d/20-10-2020...")
+[-> LogicManager : execute("addappointment 1 n/Eye Examination...")
 activate LogicManager
 
-LogicManager -> AddressBookParser : parseCommand("addappointment d/20-10-2020...")
+LogicManager -> AddressBookParser : parseCommand("addappointment 1 n/Eye Examination...")
 activate AddressBookParser
 
 create AddAppointmentCommandParser
@@ -27,7 +27,7 @@ activate AddAppointmentCommandParser
 AddAppointmentCommandParser --> AddressBookParser
 deactivate AddAppointmentCommandParser
 
-AddressBookParser -> AddAppointmentCommandParser : parse("d/20-10-2020...)
+AddressBookParser -> AddAppointmentCommandParser : parse("1 n/Eye Examination...")
 activate AddAppointmentCommandParser
 
 create AddAppointmentCommand
@@ -49,7 +49,13 @@ deactivate AddressBookParser
 LogicManager -> AddAppointmentCommand : execute()
 activate AddAppointmentCommand
 
-AddAppointmentCommand -> Model : addAppointment(toAdd)
+AddAppointmentCommand -> Model : setPerson(targetPerson, newPerson)
+activate Model
+
+Model --> AddAppointmentCommand
+deactivate Model
+
+AddAppointmentCommand -> Model : resetAppointmentList()
 activate Model
 
 Model --> AddAppointmentCommand

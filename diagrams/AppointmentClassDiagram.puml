@@ -6,6 +6,6 @@ skinparam classBackgroundColor MODEL_COLOR
 
 UniqueAppointmentList -down-> "*" Appointment
 Appointment *--> DateTime
-Appointment --> Person
+Appointment --> Nric
 Appointment *--> Name
 @enduml

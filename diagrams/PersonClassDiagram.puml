@@ -1,0 +1,20 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+skinparam arrowThickness 1.1
+skinparam arrowColor MODEL_COLOR
+skinparam classBackgroundColor MODEL_COLOR
+
+UniquePersonList -down-> "*" Person
+Person -down-> "1" Name
+Person -down-> "1" Nric
+Person -down-> "1" Gender
+Person -down-> "1" Age
+Person -down-> "1" Email
+Person -down-> "1" Phone
+Person -down-> "1" BloodType
+Person -down-> "*" Allergy
+Person -down-> "1" UniqueRecordList
+Person -down-> "1" UniqueAppointmentList
+
+@enduml

@@ -4,45 +4,64 @@
 box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
 participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":ViewCommandParser" as ViewCommandParser LOGIC_COLOR
 participant "v:ViewCommand" as ViewCommand LOGIC_COLOR
+participant "CommandResult" as CommandResult LOGIC_COLOR
 end box
 
 box Model MODEL_COLOR_T1
 participant ":Model" as Model MODEL_COLOR
-participant ":AddressBook" as AddressBook MODEL_COLOR
 end box
 
-[-> LogicManager : execute(view)
+[-> LogicManager : execute("view 1")
 activate LogicManager
 
-LogicManager -> AddressBookParser : ParseCommand(view)
+LogicManager -> AddressBookParser : ParseCommand("view 1")
 activate AddressBookParser
 
-create ViewCommand
-AddressBookParser -> ViewCommand
+create ViewCommandParser
+AddressBookParser -> ViewCommandParser
+activate ViewCommandParser
+
+ViewCommandParser --> AddressBookParser
+deactivate ViewCommandParser
+
+AddressBookParser -> ViewCommandParser : parser("1")
+activate ViewCommandParser
+
+Create ViewCommand
+ViewCommandParser -> ViewCommand
 activate ViewCommand
 
-ViewCommand --> AddressBookParser
+ViewCommand --> ViewCommandParser : v
 deactivate ViewCommand
 
-AddressBookParser --> LogicManager
+ViewCommandParser --> AddressBookParser : v
+deactivate ViewCommandParser
+
+ViewCommandParser -[hidden]-> AddressBookParser
+destroy ViewCommandParser
+
+AddressBookParser --> LogicManager : v
 deactivate AddressBookParser
 
 LogicManager -> ViewCommand : execute
 activate ViewCommand
 
-ViewCommand -> Model : call
+ViewCommand -> Model : updateRecordList(Person)
 activate Model
 
-Model -> AddressBook : updateRecordList(Person)
-activate AddressBook
+Model --> ViewCommand
 deactivate Model
 
-AddressBook -> AddressBook : setRecordList(Person)
+create CommandResult
+ViewCommand -> CommandResult
+activate CommandResult
 
+CommandResult --> ViewCommand
+deactivate CommandResult
 
-ViewCommand --> LogicManager : result
-deactivate AddressBook
+ViewCommand --> LogicManager
 deactivate ViewCommand
 ViewCommand -[hidden]-> LogicManager : result
 destroy ViewCommand

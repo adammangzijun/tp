@@ -1,0 +1,71 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":UnpinCommandParser" as UnpinCommandParser LOGIC_COLOR
+participant "c:UnpinCommand" as PinCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("unpin 1")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("unpin 1")
+activate AddressBookParser
+
+create UnpinCommandParser
+AddressBookParser -> UnpinCommandParser
+activate UnpinCommandParser
+
+UnpinCommandParser --> AddressBookParser
+deactivate UnpinCommandParser
+
+AddressBookParser -> UnpinCommandParser : parse("1")
+activate UnpinCommandParser
+
+create PinCommand
+UnpinCommandParser -> PinCommand
+activate PinCommand
+
+PinCommand --> UnpinCommandParser : c
+deactivate PinCommand
+
+UnpinCommandParser --> AddressBookParser : c
+deactivate PinCommand
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+UnpinCommandParser -[hidden]-> AddressBookParser
+destroy UnpinCommandParser
+
+AddressBookParser --> LogicManager : c
+deactivate AddressBookParser
+
+LogicManager -> PinCommand : execute(model)
+activate PinCommand
+
+PinCommand -> Model : setPerson(targetPerson, newPerson)
+activate Model
+
+Model --> PinCommand
+deactivate Model
+
+create CommandResult
+PinCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> PinCommand
+deactivate CommandResult
+
+PinCommand --> LogicManager : result
+deactivate PinCommand
+
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

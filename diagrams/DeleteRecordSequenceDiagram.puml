@@ -1,0 +1,68 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":DeleteRecordCommandParser" as DeleteRecordCommandParser LOGIC_COLOR
+participant "c:DeleteRecordCommand" as DeleteRecordCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("deleterecord 1/1")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("deleterecord 1/1")
+activate AddressBookParser
+
+create DeleteRecordCommandParser
+AddressBookParser -> DeleteRecordCommandParser
+activate DeleteRecordCommandParser
+
+DeleteRecordCommandParser --> AddressBookParser
+deactivate DeleteRecordCommandParser
+
+AddressBookParser -> DeleteRecordCommandParser : parse("1/1")
+activate DeleteRecordCommandParser
+
+create DeleteRecordCommand
+DeleteRecordCommandParser -> DeleteRecordCommand
+activate DeleteRecordCommand
+
+DeleteRecordCommand --> DeleteRecordCommandParser : c
+deactivate DeleteRecordCommand
+
+DeleteRecordCommandParser --> AddressBookParser : c
+deactivate DeleteRecordCommand
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+DeleteRecordCommandParser -[hidden]-> AddressBookParser
+destroy DeleteRecordCommandParser
+
+AddressBookParser --> LogicManager : c
+deactivate AddressBookParser
+
+LogicManager -> DeleteRecordCommand : execute(model)
+activate DeleteRecordCommand
+
+DeleteRecordCommand -> Model : setPerson(targetPatient, patientWithDeletedRecord)
+DeleteRecordCommand -> Model : updateRecordList(patientWithDeletedRecord)
+
+create CommandResult
+DeleteRecordCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> DeleteRecordCommand
+deactivate CommandResult
+
+DeleteRecordCommand --> LogicManager : result
+deactivate DeleteRecordCommand
+
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

@@ -5,7 +5,6 @@ skinparam arrowThickness 1.1
 skinparam arrowColor MODEL_COLOR
 skinparam classBackgroundColor MODEL_COLOR
 
-Person -down-> "1" UniqueRecordList
 UniqueRecordList -down-> "*" Record
 Record -down-> "1" DateTime
 Record -down-> "*" Condition

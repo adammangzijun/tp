@@ -6,7 +6,7 @@ box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
 participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
 participant ":AddRecordCommandParser" as AddRecordCommandParser LOGIC_COLOR
-participant ":AddRecordCommand" as AddRecordCommand LOGIC_COLOR
+participant "a:AddRecordCommand" as AddRecordCommand LOGIC_COLOR
 participant ":CommandResult" as CommandResult LOGIC_COLOR
 end box
 
@@ -34,22 +34,23 @@ create AddRecordCommand
 AddRecordCommandParser -> AddRecordCommand
 activate AddRecordCommand
 
-AddRecordCommand --> AddRecordCommandParser : record
+AddRecordCommand --> AddRecordCommandParser : a
 deactivate AddRecordCommand
 
-AddRecordCommandParser --> AddressBookParser : record
+AddRecordCommandParser --> AddressBookParser : a
 deactivate AddRecordCommand
 'Hidden arrow to position the destroy marker below the end of the activation bar.
 AddRecordCommandParser -[hidden]-> AddressBookParser
 destroy AddRecordCommandParser
 
-AddressBookParser --> LogicManager : record
+AddressBookParser --> LogicManager : a
 deactivate AddressBookParser
 
 LogicManager -> AddRecordCommand : execute(model)
 activate AddRecordCommand
 
-AddRecordCommand -> Model : add(record)
+AddRecordCommand -> Model : setPerson(targetPerson, newPerson)
+AddRecordCommand -> Model : updateRecordList(newPerson)
 
 create CommandResult
 AddRecordCommand -> CommandResult
@@ -58,9 +59,8 @@ activate CommandResult
 CommandResult --> AddRecordCommand
 deactivate CommandResult
 
-deactivate AddRecordCommand
-
 AddRecordCommand --> LogicManager : result
+deactivate AddRecordCommand
 
 [<--LogicManager
 deactivate LogicManager
