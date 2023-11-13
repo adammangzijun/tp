@@ -41,7 +41,7 @@ DeleteRecordCommandParser --> AddressBookParser : c
 deactivate DeleteRecordCommand
 'Hidden arrow to position the destroy marker below the end of the activation bar.
 DeleteRecordCommandParser -[hidden]-> AddressBookParser
-destroy DeleteRecordCommandParser
+deactivate DeleteRecordCommandParser
 
 AddressBookParser --> LogicManager : c
 deactivate AddressBookParser
@@ -49,8 +49,17 @@ deactivate AddressBookParser
 LogicManager -> DeleteRecordCommand : execute(model)
 activate DeleteRecordCommand
 
-DeleteRecordCommand -> Model : setPerson(targetPatient, patientWithDeletedRecord)
-DeleteRecordCommand -> Model : updateRecordList(patientWithDeletedRecord)
+DeleteRecordCommand -> Model : setPerson(targetPerson, newPerson)
+activate Model
+
+Model --> DeleteRecordCommand
+deactivate Model
+
+DeleteRecordCommand -> Model : updateRecordList(newPerson)
+activate Model
+
+Model --> DeleteRecordCommand
+deactivate Model
 
 create CommandResult
 DeleteRecordCommand -> CommandResult

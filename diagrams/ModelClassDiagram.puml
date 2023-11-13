@@ -16,18 +16,7 @@ Class UniquePersonList
 Class UniqueRecordList
 Class UniqueAppointmentList
 Class Person
-Class Email
-Class Name
-Class Phone
-Class Age
-Class Allergy
-Class Gender
-Class Phone
-Class Nric
 Class Record
-Class DateTime
-Class Condition
-Class Medication
 Class Appointment
 
 Class I #FFFFFF
@@ -46,33 +35,19 @@ Model .left.> ReadOnlyAddressBook
 ModelManager -down-> "1" AddressBook
 ModelManager -down-> "1" UserPrefs
 
+AddressBook *--> "1" UniqueAppointmentList
 AddressBook *--> "2" UniquePersonList
 AddressBook *--> "1" UniqueRecordList
-AddressBook *--> "1" UniqueAppointmentList
+ModelManager --> "~* filtered" Person
+ModelManager --> "~* filtered" Record
 UniquePersonList --> "~* all" Person
 UniqueRecordList --> "~* all" Record
-UniqueAppointmentList --> "~* all" Appointment
-Person *--> Name
-Person *--> Phone
-Person *--> Email
-Person *--> Age
-Person *--> Gender
-Person *--> "*" Allergy
-Person *-right-> "*" Record
-Person *--> Nric
-Record *--> DateTime
-Record *--> "*" Condition
-Record *--> "*" Medication
-Appointment *--> DateTime
-Appointment *--> Name
-Appointment *--> Nric
+UniqueAppointmentList --> "~*" Appointment
 
 ModelManager -[hidden]down- UniquePersonList
 ModelManager -[hidden]down- UniqueRecordList
-ModelManager -[hidden]down- UniqueAppointmentList
+UniqueAppointmentList -[hidden]right- UniquePersonList
 
-ModelManager --> "~* filtered" Person
-ModelManager --> "~* filtered" Record
-ModelManager --> "~* filtered" Appointment
+
 
 @enduml

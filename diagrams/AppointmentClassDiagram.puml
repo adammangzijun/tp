@@ -5,7 +5,7 @@ skinparam arrowColor MODEL_COLOR
 skinparam classBackgroundColor MODEL_COLOR
 
 UniqueAppointmentList -down-> "*" Appointment
-Appointment *--> DateTime
-Appointment --> Nric
-Appointment *--> Name
+Appointment *--> "1" DateTime
+Appointment *--> "1" Nric
+Appointment *--> "1" Name
 @enduml

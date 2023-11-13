@@ -38,10 +38,7 @@ AddRecordCommand --> AddRecordCommandParser : a
 deactivate AddRecordCommand
 
 AddRecordCommandParser --> AddressBookParser : a
-deactivate AddRecordCommand
-'Hidden arrow to position the destroy marker below the end of the activation bar.
-AddRecordCommandParser -[hidden]-> AddressBookParser
-destroy AddRecordCommandParser
+deactivate AddRecordCommandParser
 
 AddressBookParser --> LogicManager : a
 deactivate AddressBookParser
@@ -50,7 +47,16 @@ LogicManager -> AddRecordCommand : execute(model)
 activate AddRecordCommand
 
 AddRecordCommand -> Model : setPerson(targetPerson, newPerson)
+activate Model
+
+Model --> AddRecordCommand
+deactivate Model
+
 AddRecordCommand -> Model : updateRecordList(newPerson)
+activate Model
+
+Model --> AddRecordCommand
+deactivate Model
 
 create CommandResult
 AddRecordCommand -> CommandResult

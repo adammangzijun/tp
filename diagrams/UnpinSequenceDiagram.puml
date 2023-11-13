@@ -41,7 +41,7 @@ UnpinCommandParser --> AddressBookParser : c
 deactivate PinCommand
 'Hidden arrow to position the destroy marker below the end of the activation bar.
 UnpinCommandParser -[hidden]-> AddressBookParser
-destroy UnpinCommandParser
+deactivate UnpinCommandParser
 
 AddressBookParser --> LogicManager : c
 deactivate AddressBookParser

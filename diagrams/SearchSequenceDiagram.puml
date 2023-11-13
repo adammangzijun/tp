@@ -1,11 +1,13 @@
 @startuml
 !include style.puml
+skinparam ArrowFontStyle plain
 
 box Logic LOGIC_COLOR_T1
-participant "User" as User LOGIC_COLOR
 participant ":LogicManager" as LogicManager LOGIC_COLOR
 participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
-participant "findCommand:FindCommand" as FindCommand LOGIC_COLOR
+participant ":FindCommandParser" as FindCommandParser LOGIC_COLOR
+participant "c:FindCommand" as FindCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
 end box
 
 
@@ -14,20 +16,39 @@ participant ":Model" as Model MODEL_COLOR
 participant "predicate:NameContainsKeywordsPredicate" as Predicate MODEL_COLOR
 end box
 
-box UI UI_COLOR_T1
-participant ":MainWindow" as MainWindow UI_COLOR
-end box
 
 
-User -> LogicManager : "search [keywords]"
+[-> LogicManager : "search Adam"
 activate LogicManager
 
-LogicManager -> AddressBookParser : parseCommand("search [keywords]")
+LogicManager -> AddressBookParser : parseCommand("search Adam")
 activate AddressBookParser
 
+create FindCommandParser
+AddressBookParser -> FindCommandParser
+activate FindCommandParser
+
+FindCommandParser --> AddressBookParser
+deactivate FindCommandParser
+
+AddressBookParser -> FindCommandParser : parse("Adam")
+activate FindCommandParser
+
 create FindCommand
-AddressBookParser -> FindCommand : test(keywords)
+FindCommandParser -> FindCommand
 activate FindCommand
+
+FindCommand --> FindCommandParser : c
+deactivate FindCommand
+
+FindCommandParser --> AddressBookParser : c
+deactivate FindCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+FindCommandParser -[hidden]-> AddressBookParser
+deactivate FindCommandParser
+
+AddressBookParser --> LogicManager : c
+deactivate AddressBookParser
 
 LogicManager -> FindCommand : execute()
 activate FindCommand
@@ -45,13 +66,14 @@ end
 Model --> FindCommand : return filteredList
 deactivate Model
 
-FindCommand --> LogicManager : CommandResult
+create CommandResult
+FindCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> FindCommand : result
+deactivate CommandResult
+
+FindCommand --> LogicManager : result
 deactivate FindCommand
-
-LogicManager -> MainWindow : displayFilteredList()
-activate MainWindow
-MainWindow --> LogicManager : Displayed
-deactivate MainWindow
-
 
 @enduml

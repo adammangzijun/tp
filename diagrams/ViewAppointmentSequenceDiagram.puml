@@ -11,6 +11,7 @@ box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
 participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
 participant "v:ViewAppointmentCommand" as ViewAppointmentCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
 end box
 
 [-> MainWindow : "viewappointment"
@@ -26,20 +27,27 @@ create ViewAppointmentCommand
 AddressBookParser -> ViewAppointmentCommand
 activate ViewAppointmentCommand
 
-ViewAppointmentCommand --> AddressBookParser
+ViewAppointmentCommand --> AddressBookParser : v
 deactivate ViewAppointmentCommand
 
-AddressBookParser --> LogicManager
+AddressBookParser --> LogicManager : v
 deactivate AddressBookParser
 
-LogicManager -> ViewAppointmentCommand : execute
+LogicManager -> ViewAppointmentCommand : execute(model)
 activate ViewAppointmentCommand
+
+create CommandResult
+ViewAppointmentCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> ViewAppointmentCommand
+deactivate CommandResult
 
 ViewAppointmentCommand --> LogicManager : result
 deactivate ViewAppointmentCommand
 ViewAppointmentCommand -[hidden]-> LogicManager : result
 
-MainWindow <-- LogicManager
+MainWindow <-- LogicManager : result
 deactivate LogicManager
 
 MainWindow -> MainWindow : handleAppointment()
@@ -48,8 +56,14 @@ activate MainWindow
 MainWindow -> AppointmentsWindow : show()
 activate AppointmentsWindow
 
+AppointmentsWindow -> AppointmentsWindow : fillInnerParts()
+activate AppointmentsWindow
+deactivate AppointmentsWindow
+
 AppointmentsWindow --> MainWindow
 deactivate AppointmentsWindow
+
+deactivate MainWindow
 
 [<-- MainWindow
 deactivate MainWindow

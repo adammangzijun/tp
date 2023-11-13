@@ -13,20 +13,10 @@ Class HelpWindow
 Class AppointmentsWindow
 Class ResultDisplay
 Class PersonListPanel
-Class AppointmentListPanel
-Class PersonViewPanel
 Class PinnedPersonListPanel
 Class RecordListPanel
-Class AppointmentCalendarPanel
-Class PersonCard
-Class RecordCard
-Class AppointmentCard
 Class StatusBarFooter
 Class CommandBox
-}
-
-package Model <<Rectangle>> {
-Class HiddenModel #FFFFFF
 }
 
 package Logic <<Rectangle>> {
@@ -40,48 +30,26 @@ UiManager .left.|> Ui
 UiManager -down-> "1" MainWindow
 MainWindow *-down->  "1" CommandBox
 MainWindow *-down-> "1" ResultDisplay
-MainWindow *-down-> "1" PersonListPanel
-MainWindow *-down-> "1" PersonViewPanel
+MainWindow *-down-> "2" PersonListPanel
 MainWindow *-down-> "1" RecordListPanel
 MainWindow *-down-> "0..1" AppointmentsWindow
 MainWindow *-down-> "1" PinnedPersonListPanel
 MainWindow *-down-> "1" StatusBarFooter
 MainWindow --> "0..1" HelpWindow
 
-PersonListPanel -down-> "*" PersonCard
 
-PersonViewPanel -down-> "1" PersonCard
-
-PinnedPersonListPanel -down-> "*" PersonCard
-
-RecordListPanel -down-> "*" RecordCard
-
-AppointmentsWindow -down-> "1" AppointmentCalendarPanel
-
-AppointmentsWindow -down-> "1" AppointmentListPanel
-
-AppointmentListPanel -down-> "*" AppointmentCard
 
 MainWindow -left-|> UiPart
 
 ResultDisplay --|> UiPart
 CommandBox --|> UiPart
 PersonListPanel --|> UiPart
-PersonCard --|> UiPart
 StatusBarFooter --|> UiPart
 HelpWindow --|> UiPart
-PersonViewPanel --|> UiPart
 PinnedPersonListPanel --|> UiPart
 RecordListPanel --|> UiPart
-RecordCard --|> UiPart
 AppointmentsWindow --|> UiPart
-AppointmentListPanel --|> UiPart
-AppointmentCard --|> UiPart
-AppointmentCalendarPanel --|> UiPart
 
-PersonCard ..> Model
-RecordCard ..> Model
-AppointmentCard ..> Model
 UiManager -right-> Logic
 MainWindow -left-> Logic
 
@@ -90,12 +58,9 @@ PersonListPanel -[hidden]left- HelpWindow
 HelpWindow -[hidden]left- CommandBox
 CommandBox -[hidden]left- ResultDisplay
 ResultDisplay -[hidden]left- StatusBarFooter
-PinnedPersonListPanel -[hidden]left- PersonViewPanel
 RecordListPanel -[hidden]left- PinnedPersonListPanel
 AppointmentsWindow -[hidden]left- RecordListPanel
 
-PersonCard -[hidden]left- RecordCard
-RecordCard -[hidden]left-AppointmentCalendarPanel
 
 MainWindow -[hidden]-|> UiPart
 @enduml

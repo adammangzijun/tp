@@ -41,7 +41,7 @@ DeleteAppointmentCommandParser --> AddressBookParser : c
 deactivate DeleteAppointmentCommand
 'Hidden arrow to position the destroy marker below the end of the activation bar.
 DeleteAppointmentCommandParser -[hidden]-> AddressBookParser
-destroy DeleteAppointmentCommandParser
+deactivate DeleteAppointmentCommandParser
 
 AddressBookParser --> LogicManager : c
 deactivate AddressBookParser

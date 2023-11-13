@@ -10,14 +10,18 @@ participant "c:FindRecordCommand" as FindRecordCommand LOGIC_COLOR
 participant ":CommandResult" as CommandResult LOGIC_COLOR
 end box
 
+
 box Model MODEL_COLOR_T1
 participant ":Model" as Model MODEL_COLOR
+participant "predicate:RecordContainsKeywordsPredicate" as Predicate MODEL_COLOR
 end box
 
-[-> LogicManager : execute("searchrecord Ibuprofen")
+
+
+[-> LogicManager : "searchrecord Fever"
 activate LogicManager
 
-LogicManager -> AddressBookParser : parseCommand("searchrecord Ibuprofen")
+LogicManager -> AddressBookParser : parseCommand("searchrecord Fever")
 activate AddressBookParser
 
 create FindRecordCommandParser
@@ -27,7 +31,7 @@ activate FindRecordCommandParser
 FindRecordCommandParser --> AddressBookParser
 deactivate FindRecordCommandParser
 
-AddressBookParser -> FindRecordCommandParser : parse("Ibuprofen")
+AddressBookParser -> FindRecordCommandParser : parse("Fever")
 activate FindRecordCommandParser
 
 create FindRecordCommand
@@ -38,10 +42,10 @@ FindRecordCommand --> FindRecordCommandParser : c
 deactivate FindRecordCommand
 
 FindRecordCommandParser --> AddressBookParser : c
-deactivate FindRecordCommand
+deactivate FindRecordCommandParser
 'Hidden arrow to position the destroy marker below the end of the activation bar.
 FindRecordCommandParser -[hidden]-> AddressBookParser
-destroy FindRecordCommandParser
+deactivate FindRecordCommandParser
 
 AddressBookParser --> LogicManager : c
 deactivate AddressBookParser
@@ -50,6 +54,17 @@ LogicManager -> FindRecordCommand : execute(model)
 activate FindRecordCommand
 
 FindRecordCommand -> Model : updateFilteredRecordList(predicate)
+activate Model
+
+loop for each record in List
+    Model -> Predicate : test(record)
+    activate Predicate
+    Predicate --> Model : result
+    deactivate Predicate
+end
+
+Model --> FindRecordCommand : filteredList
+deactivate Model
 
 create CommandResult
 FindRecordCommand -> CommandResult
@@ -61,7 +76,4 @@ deactivate CommandResult
 FindRecordCommand --> LogicManager : result
 deactivate FindRecordCommand
 
-
-[<--LogicManager
-deactivate LogicManager
 @enduml

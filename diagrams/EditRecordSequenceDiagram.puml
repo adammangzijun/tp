@@ -1,0 +1,92 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":EditRecordCommandParser" as EditRecordCommandParser LOGIC_COLOR
+participant "e:EditRecordCommand" as EditRecordCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "model:Model" as Model MODEL_COLOR
+participant "editedPerson:Person" as Person MODEL_COLOR
+participant "editedRecord:Record" as Record MODEL_COLOR
+end box
+
+[-> LogicManager : execute("editrecord 1/1 c/Fever")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("editrecord 1/1 c/Fever")
+activate AddressBookParser
+
+create EditRecordCommandParser
+AddressBookParser -> EditRecordCommandParser
+activate EditRecordCommandParser
+
+EditRecordCommandParser --> AddressBookParser
+deactivate EditRecordCommandParser
+
+AddressBookParser -> EditRecordCommandParser : parse("1/1 c/Fever")
+activate EditRecordCommandParser
+
+create EditRecordCommand
+EditRecordCommandParser -> EditRecordCommand
+activate EditRecordCommand
+
+EditRecordCommand --> EditRecordCommandParser : e
+deactivate EditRecordCommand
+
+EditRecordCommandParser --> AddressBookParser : e
+deactivate EditRecordCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+EditRecordCommandParser -[hidden]-> AddressBookParser
+deactivate EditRecordCommandParser
+
+AddressBookParser --> LogicManager : e
+deactivate AddressBookParser
+
+LogicManager -> EditRecordCommand : execute(model)
+activate EditRecordCommand
+
+create Record
+EditRecordCommand -> Record : createEditedRecord(record, editRecordDescriptor)
+activate Record
+
+Record --> EditRecordCommand
+deactivate Record
+
+create Person
+EditRecordCommand -> Person : createEditedPerson(person, editPersonDescriptor)
+activate Person
+
+Person --> EditRecordCommand
+deactivate Person
+
+EditRecordCommand -> Model : setPerson(targetPerson, editedPerson)
+activate Model
+
+Model --> EditRecordCommand
+deactivate Model
+
+EditRecordCommand -> Model : updateRecordList(newPerson)
+activate Model
+
+Model --> EditRecordCommand
+deactivate Model
+
+create CommandResult
+EditRecordCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> EditRecordCommand
+deactivate CommandResult
+
+EditRecordCommand --> LogicManager : result
+deactivate EditRecordCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

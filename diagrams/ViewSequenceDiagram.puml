@@ -1,12 +1,13 @@
 @startuml
 !include style.puml
+skinparam ArrowFontStyle plain
 
 box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
 participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
 participant ":ViewCommandParser" as ViewCommandParser LOGIC_COLOR
 participant "v:ViewCommand" as ViewCommand LOGIC_COLOR
-participant "CommandResult" as CommandResult LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
 end box
 
 box Model MODEL_COLOR_T1
@@ -16,7 +17,7 @@ end box
 [-> LogicManager : execute("view 1")
 activate LogicManager
 
-LogicManager -> AddressBookParser : ParseCommand("view 1")
+LogicManager -> AddressBookParser : parseCommand("view 1")
 activate AddressBookParser
 
 create ViewCommandParser
@@ -26,7 +27,7 @@ activate ViewCommandParser
 ViewCommandParser --> AddressBookParser
 deactivate ViewCommandParser
 
-AddressBookParser -> ViewCommandParser : parser("1")
+AddressBookParser -> ViewCommandParser : parse("1")
 activate ViewCommandParser
 
 Create ViewCommand
@@ -40,12 +41,12 @@ ViewCommandParser --> AddressBookParser : v
 deactivate ViewCommandParser
 
 ViewCommandParser -[hidden]-> AddressBookParser
-destroy ViewCommandParser
+deactivate ViewCommandParser
 
 AddressBookParser --> LogicManager : v
 deactivate AddressBookParser
 
-LogicManager -> ViewCommand : execute
+LogicManager -> ViewCommand : execute(model)
 activate ViewCommand
 
 ViewCommand -> Model : updateRecordList(Person)
@@ -61,10 +62,8 @@ activate CommandResult
 CommandResult --> ViewCommand
 deactivate CommandResult
 
-ViewCommand --> LogicManager
+ViewCommand --> LogicManager : result
 deactivate ViewCommand
-ViewCommand -[hidden]-> LogicManager : result
-destroy ViewCommand
 
 [<-- LogicManager
 deactivate LogicManager
